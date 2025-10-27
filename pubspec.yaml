@@ -1,0 +1,32 @@
+name: rivu_v1
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ^3.8.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_native_splash: ^2.4.7
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/background/
+    - assets/images/
+
+flutter_native_splash:
+  color: "#3AA346" 
+  image: assets/images/logo.png
+  android_gravity: center
+  ios_content_mode: center
+  web: false 
+  android: true
+  ios: true
