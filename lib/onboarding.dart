@@ -1,5 +1,4 @@
 import "package:flutter/material.dart";
-import "package:rivu_v1/core/route.dart";
 import "package:rivu_v1/login/view/viewlogin.dart";
 
 class OnboardingPageData {

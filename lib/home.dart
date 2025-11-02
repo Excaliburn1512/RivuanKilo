@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:rivu_v1/pages/controlsensor/view/controlview.dart';
 import 'package:rivu_v1/pages/dashboard/view/dashboardview.dart';
 import 'package:rivu_v1/pages/detect/view/detectview.dart';
