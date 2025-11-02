@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:rivu_v1/pages/dashboard/view/dashboardview.dart';
 import 'package:rivu_v1/home.dart';
 import 'package:rivu_v1/login/view/viewlogin.dart';
 import 'package:rivu_v1/splash.dart';
