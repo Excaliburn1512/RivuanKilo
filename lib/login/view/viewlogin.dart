@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rivu_v1/core/route.dart';
+import 'package:rivu_v1/usermodel.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -25,11 +26,13 @@ class _LoginPageState extends State<LoginPage> {
     final size = MediaQuery.of(context).size;
 
     return Scaffold(
+      backgroundColor: Colors.grey.shade900,
       body: SafeArea(
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           child: ConstrainedBox(
             constraints: BoxConstraints(
+  
               minHeight:
                   size.height -
                   MediaQuery.of(context).padding.top -
@@ -44,7 +47,6 @@ class _LoginPageState extends State<LoginPage> {
 
                   const SizedBox(height: 24),
 
-                  // Welcome Text
                   const Text(
                     "Selamat Datang Kembali",
                     style: TextStyle(
@@ -191,7 +193,6 @@ class _LoginPageState extends State<LoginPage> {
                           alignment: Alignment.centerRight,
                           child: TextButton(
                             onPressed: () {
-                              // Aksi untuk lupa password
                             },
                             style: TextButton.styleFrom(
                               padding: const EdgeInsets.symmetric(
@@ -230,9 +231,19 @@ class _LoginPageState extends State<LoginPage> {
                                     shadowColor: Colors.black.withOpacity(0.3),
                                   ),
                                   onPressed: () {
-                                    Navigator.of(
-                                      context,
-                                    ).pushReplacementNamed(AppRoutes.home);
+                                    final mockUser = Usermodel(
+                                      uuid: "mock-uuid-12345",
+                                      name: "Saipul Teams",
+                                      email: _emailController.text.isNotEmpty
+                                          ? _emailController.text
+                                          : "mock-email@example.com",
+                                    );
+
+                                    Navigator.of(context).pushReplacementNamed(
+                                      AppRoutes.home,
+                                      arguments:
+                                          mockUser, 
+                                    );
                                   },
                                   child: const Text(
                                     "Login",

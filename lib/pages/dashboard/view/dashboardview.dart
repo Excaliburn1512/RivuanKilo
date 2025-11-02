@@ -1,68 +1,96 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:rivu_v1/colors.dart';
+import 'package:rivu_v1/widget/dashboard/dashboardbanner.dart';
+import 'package:rivu_v1/widget/dashboard/weathercard.dart';
+import 'package:rivu_v1/widget/systemstatusbanner.dart';
+import 'package:rivu_v1/widget/infocard.dart';
 
-class Dashboard extends StatefulWidget {
-  const Dashboard({super.key});
+class Dashboard extends StatelessWidget {
+  const Dashboard({Key? key}) : super(key: key);
 
-  @override
-  State<Dashboard> createState() => _DashboardState();
-}
+  Widget _buildSectionTitle(String title) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: Text(
+        title,
+        style: GoogleFonts.poppins(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+          color: Colors.black87,
+        ),
+      ),
+    );
+  }
 
-class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
-    return Stack(
-        children: <Widget>[
-          Positioned.fill(
-            child: Image(
-              image: AssetImage("assets/background/background.png"),
-              fit: BoxFit.cover,
-            ),
-          ),
-          Column(
-            children: <Widget>[
-              SizedBox(height: MediaQuery.of(context).size.height * 0.05),
-              Row(
-                spacing: 6,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  SizedBox(width: MediaQuery.of(context).size.width * 0.02),
-                  Icon(Icons.circle, size: 60, color: Colors.grey),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("Selamat Datang", style: TextStyle()),
-                      Text(
-                        "Pajrin",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Spacer(),
-                  IconButton(onPressed: () {}, icon: Icon(Icons.notifications))
-                ],
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.03),
-              Container(
-                height: MediaQuery.of(context).size.height * 0.23,
-                width: MediaQuery.of(context).size.width * 0.83,
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.5),
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      blurRadius: 10,
-                      offset: Offset(0, 10),
-                    ),
-                  ],
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Stack(
+            clipBehavior: Clip.none,
+            alignment: Alignment.topCenter,
+            children: [
+              DashboardHeader(userName: "Saipul Teams"),
+              Positioned(
+                top: 160, 
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 0.85,
+                  child: WeatherCard(),
                 ),
               ),
             ],
           ),
+          SizedBox(height: 110), 
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 30.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SystemStatusBanner(judul: "Status System",text: "Semua System Normal",color: AppColors.primary),
+                SizedBox(height: 24),
+                _buildSectionTitle("Informasi Greenhouse"),
+                Row(
+                  children: [
+                    Expanded(
+                      child: InfoCard(
+                        icon: Icons.water_drop_outlined,
+                        iconColor: Colors.blue.shade600,
+                        title: "pH Kolam",
+                        value: "7,5",
+                        unit: "",
+                      ),
+                    ),
+                    SizedBox(width: 16),
+                    Expanded(
+                      child: InfoCard(
+                        icon: Icons.waves_outlined,
+                        iconColor: Colors.green.shade600,
+                        title: "TDS Kolam",
+                        value: "750",
+                        unit: "ppm",
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 16),
+                Center(
+                  child: InfoCard(
+                    icon: Icons.eco_outlined,
+                    iconColor: Colors.teal.shade600,
+                    title: "TDS Nutrisi Tanaman",
+                    value: "690",
+                    unit: "ppm",
+                  ),
+                ),
+                SizedBox(height: 24),
+  
+              ],
+            ),
+          ),
         ],
+      ),
     );
   }
 }

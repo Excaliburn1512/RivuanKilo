@@ -10,6 +10,9 @@ class ProfileView extends StatefulWidget {
 class _ProfileViewState extends State<ProfileView> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: Center(child: Text("ProfileView Page")));
+    return Scaffold(body: Center(child: ElevatedButton(onPressed: (){
+      
+      Navigator.pushNamed(context, '/login');
+    } , child: Icon(Icons.person))));
   }
 }
