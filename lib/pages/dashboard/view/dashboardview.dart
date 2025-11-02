@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:rivu_v1/widget/grititem.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
@@ -11,8 +10,7 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
+    return Stack(
         children: <Widget>[
           Positioned.fill(
             child: Image(
@@ -24,7 +22,7 @@ class _DashboardState extends State<Dashboard> {
             children: <Widget>[
               SizedBox(height: MediaQuery.of(context).size.height * 0.05),
               Row(
-                spacing: 5,
+                spacing: 6,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
                   SizedBox(width: MediaQuery.of(context).size.width * 0.02),
@@ -42,6 +40,8 @@ class _DashboardState extends State<Dashboard> {
                       ),
                     ],
                   ),
+                  Spacer(),
+                  IconButton(onPressed: () {}, icon: Icon(Icons.notifications))
                 ],
               ),
               SizedBox(height: MediaQuery.of(context).size.height * 0.03),
@@ -60,52 +60,9 @@ class _DashboardState extends State<Dashboard> {
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(33.0),
-                child: GridView.count(
-                  shrinkWrap: true,
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 20,
-                  crossAxisSpacing: 20,
-                  physics: NeverScrollableScrollPhysics(),
-                  children: [
-                    GridItemCard(
-                      child: Text(
-                        'Menu 1',
-                        style: TextStyle(color: Colors.black54),
-                      ),
-                      onTap: () {
-                        print('Menu 1 diklik');
-                      },
-                    ),
-                    GridItemCard(
-                      child: Text(
-                        'Menu 2',
-                        style: TextStyle(color: Colors.black54),
-                      ),
-                      onTap: () {},
-                    ),
-                    GridItemCard(
-                      child: Text(
-                        'Menu 3',
-                        style: TextStyle(color: Colors.black54),
-                      ),
-                      onTap: () {},
-                    ),
-                    GridItemCard(
-                      child: Text(
-                        'Menu 4',
-                        style: TextStyle(color: Colors.black54),
-                      ),
-                      onTap: () {},
-                    ),
-                  ],
-                ),
-              ),
             ],
           ),
         ],
-      ),
     );
   }
 }

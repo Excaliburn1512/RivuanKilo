@@ -1,5 +1,5 @@
 name: rivu_v1
-description: "A new Flutter project."
+description: "Mobile application for Rivu"
 publish_to: 'none'
 version: 0.1.0
 
@@ -10,6 +10,8 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_native_splash: ^2.4.7
+  google_fonts: ^6.3.2
+  google_nav_bar: ^5.0.7
 
 dev_dependencies:
   flutter_test:
@@ -21,6 +23,7 @@ flutter:
   assets:
     - assets/background/
     - assets/images/
+    - assets/icon/
 
 flutter_native_splash:
   color: "#3AA346" 

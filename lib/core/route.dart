@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:rivu_v1/dashboard/view/dashboard.dart';
+import 'package:rivu_v1/pages/dashboard/view/dashboardview.dart';
+import 'package:rivu_v1/home.dart';
+import 'package:rivu_v1/login/view/viewlogin.dart';
 import 'package:rivu_v1/splash.dart';
 
 class AppRoutes {
@@ -12,11 +14,10 @@ class AppRoutes {
       case splash:
         return MaterialPageRoute(builder: (_) => Splash());
       case home:
-        return MaterialPageRoute(builder: (_) => Dashboard());
-
+        return MaterialPageRoute(builder: (_) => Home());
       case login:
         return MaterialPageRoute(
-          builder: (_) => _ErrorScreen(routeName: settings.name),
+          builder: (_) => LoginPage(),
         );
 
       default:
