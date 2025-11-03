@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:rivu_v1/colors.dart';
 
-import 'package:rivu_v1/widget/detect/detecttogglebar.dart';
+import 'package:rivu_v1/widget/togglebar.dart';
 import 'package:rivu_v1/widget/detect/weekdayselector.dart';
 import 'package:rivu_v1/widget/infocard.dart';
 import 'package:rivu_v1/widget/systemstatusbanner.dart';
@@ -41,7 +41,8 @@ class _DetectPageState extends State<DetectPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(height: 30),
-          DetectToggleBar(
+          ToggleBar(
+            title: "Detect",
             isTanamanView: _isTanamanView,
             onTanamanPressed: () {
               setState(() {

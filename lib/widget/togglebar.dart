@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:rivu_v1/colors.dart'; //
+import 'package:rivu_v1/colors.dart'; 
 
-class DetectToggleBar extends StatelessWidget {
+class ToggleBar extends StatelessWidget {
   final bool isTanamanView;
-  final VoidCallback onTanamanPressed;
-  final VoidCallback onKolamPressed;
+  final VoidCallback? onTanamanPressed;
+  final VoidCallback? onKolamPressed;
+  final VoidCallback? onPompaPressed;
+  final String title;
 
-  const DetectToggleBar({
+  const ToggleBar({
     Key? key,
     required this.isTanamanView,
-    required this.onTanamanPressed,
-    required this.onKolamPressed,
+    this.onTanamanPressed,
+    this.onKolamPressed,
+    this.onPompaPressed,
+    required this.title,
   }) : super(key: key);
 
   @override
@@ -20,7 +24,7 @@ class DetectToggleBar extends StatelessWidget {
       height: 50,
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(12.0),
+        borderRadius: BorderRadius.circular(20.0),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
@@ -31,8 +35,13 @@ class DetectToggleBar extends StatelessWidget {
       ),
       child: Row(
         children: [
-          _buildToggleItem("Tanaman", isTanamanView, onTanamanPressed),
-          _buildToggleItem("Kolam", !isTanamanView, onKolamPressed),
+          if (title == "History") ...[
+            _buildToggleItem("Tanaman", isTanamanView, onTanamanPressed!),
+            _buildToggleItem("Pompa", !isTanamanView, onPompaPressed!),
+          ] else ...[
+            _buildToggleItem("Tanaman", isTanamanView, onTanamanPressed!),
+            _buildToggleItem("Kolam", !isTanamanView, onKolamPressed!),
+          ],
         ],
       ),
     );
@@ -48,7 +57,7 @@ class DetectToggleBar extends StatelessWidget {
             duration: Duration(milliseconds: 200),
             decoration: BoxDecoration(
               color: isActive ? AppColors.primary : Colors.white, //
-              borderRadius: BorderRadius.circular(12.0),
+              borderRadius: BorderRadius.circular(20.0),
             ),
             child: Center(
               child: Text(

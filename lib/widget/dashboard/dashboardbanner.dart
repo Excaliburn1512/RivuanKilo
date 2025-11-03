@@ -62,6 +62,7 @@ class DashboardHeader extends StatelessWidget {
                 size: 28,
               ),
               onPressed: () {
+                Navigator.pushNamed(context, '/notifications');
               },
             ),
           ],

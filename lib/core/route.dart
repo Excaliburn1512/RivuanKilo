@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rivu_v1/home.dart';
 import 'package:rivu_v1/login/view/viewlogin.dart';
+import 'package:rivu_v1/pages/notification/view/notificationview.dart';
 import 'package:rivu_v1/splash.dart';
 import 'package:rivu_v1/usermodel.dart';
 
@@ -8,6 +9,10 @@ class AppRoutes {
   static const String splash = '/';
   static const String login = '/login';
   static const String home = '/home';
+  static const String profile = '/profile';
+  static const String detect = '/detect';
+  static const String notification = '/notifications';
+  static const String history = '/history';
   static const String initial = splash;
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -27,9 +32,9 @@ class AppRoutes {
           builder: (_) => _ErrorScreen(routeName: "Home (Data User Hilang)"),
         );
       case login:
-        return MaterialPageRoute(
-          builder: (_) => LoginPage(),
-        );
+        return MaterialPageRoute(builder: (_) => LoginPage());
+      case notification:
+        return MaterialPageRoute(builder: (_) => NotificationView());
 
       default:
         return MaterialPageRoute(

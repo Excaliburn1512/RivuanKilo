@@ -26,7 +26,7 @@ class _HomeState extends State<Home> {
       DetectPage(),
       ControlSensor(),
       HistoryView(),
-      ProfileView(),
+      ProfileView(user: widget.user),
     ];
   }
   void _onItemTapped(int index) {
