@@ -1,14 +1,11 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:rivu_v1/usermodel.dart'; 
-import 'package:rivu_v1/core/route.dart'; 
+import 'package:rivu_v1/usermodel.dart';
+import 'package:rivu_v1/core/route.dart';
 import 'package:rivu_v1/colors.dart';
 import 'package:rivu_v1/widget/profil/avatar.dart';
 import 'package:rivu_v1/widget/profil/buttonprofile.dart';
-import 'package:rivu_v1/widget/profil/profilinfo.dart'; 
-
+import 'package:rivu_v1/widget/profil/profilinfo.dart';
 
 class ProfileView extends StatefulWidget {
   final Usermodel user;
@@ -21,9 +18,10 @@ class ProfileView extends StatefulWidget {
 class _ProfileViewState extends State<ProfileView> {
   void _handleLogout() {
     if (!mounted) return;
-    Navigator.of(context, rootNavigator: true).pushReplacementNamed(
-      AppRoutes.login, //
-    );
+    Navigator.of(
+      context,
+      rootNavigator: true,
+    ).pushReplacementNamed(AppRoutes.auth);
   }
 
   @override
@@ -44,7 +42,7 @@ class _ProfileViewState extends State<ProfileView> {
             SizedBox(height: 16),
             ProfileInfoField(
               label: "Kata Sandi",
-              value: "**********", 
+              value: "**********",
               isObscure: true,
             ),
 
@@ -74,8 +72,7 @@ class _ProfileViewState extends State<ProfileView> {
     return Align(
       alignment: Alignment.centerRight,
       child: TextButton(
-        onPressed: () {
-        },
+        onPressed: () {},
         child: Text(
           "Ubah Kata Sandi?",
           style: GoogleFonts.poppins(

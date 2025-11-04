@@ -86,19 +86,6 @@ class _DetectPageState extends State<DetectPage> {
           itemCount: 4,
           itemBuilder: (context, index) => PlantGridItem(),
         ),
-        _buildSectionTitle("Baris 2"),
-        GridView.builder(
-          shrinkWrap: true,
-          padding: EdgeInsets.zero,
-          physics: NeverScrollableScrollPhysics(),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 4,
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 10,
-          ),
-          itemCount: 4,
-          itemBuilder: (context, index) => PlantGridItem(),
-        ),
         _buildSectionTitle("Informasi sensor"),
         Row(
           children: [
