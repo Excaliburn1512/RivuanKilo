@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 class DashboardHeader extends StatelessWidget {
   final String userName;
-
   const DashboardHeader({Key? key, required this.userName}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -28,7 +25,6 @@ class DashboardHeader extends StatelessWidget {
           fit: BoxFit.cover, 
         ),
       ),
-
       child: SafeArea(
         bottom: false,
         child: Row(

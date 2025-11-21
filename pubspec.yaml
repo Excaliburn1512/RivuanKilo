@@ -9,15 +9,41 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+    # State Management
+  flutter_riverpod: ^2.5.1
+
+  # Networking
+  dio: ^5.4.3+1
+  retrofit: ^4.1.0
+  json_annotation: ^4.9.0
+
+  # Bluetooth
+  flutter_blue_classic: ^0.0.7
+
+  # Session / Storage
+  shared_preferences: ^2.2.3
+
+  firebase_core: ^2.27.0 
+  firebase_database: ^10.4.0 
+
   flutter_native_splash: ^2.4.7
   google_fonts: ^6.3.2
   google_nav_bar: ^5.0.7
   lottie: ^3.3.1
+  permission_handler: ^12.0.1
+  uuid: ^4.5.2
+  flutter_expandable_fab: ^2.5.2
+  elegant_nav_bar: ^0.0.22
+  flutter_vlc_player: ^7.4.4
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
+  # Code Generators
+  build_runner: ^2.4.10
+  retrofit_generator: ^8.1.0
+  json_serializable: ^6.8.0
 
 flutter:
   uses-material-design: true

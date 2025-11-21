@@ -1,23 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:rivu_v1/widget/authtextfield.dart'; 
-
-class RegisterPage extends StatefulWidget {
+import 'package:rivu_v1/auth/controller/auth_controller.dart';
+import 'package:rivu_v1/auth/view/pairing_dialog.dart';
+import 'package:rivu_v1/auth/view/wifi_dialog.dart';
+import 'package:rivu_v1/widget/authtextfield.dart';
+class RegisterPage extends ConsumerStatefulWidget {
   final VoidCallback onGoToLogin;
-
   const RegisterPage({super.key, required this.onGoToLogin});
-
   @override
-  State<RegisterPage> createState() => _RegisterPageState();
+  ConsumerState<RegisterPage> createState() => _RegisterPageState();
 }
-
-class _RegisterPageState extends State<RegisterPage> {
+class _RegisterPageState extends ConsumerState<RegisterPage> {
   final TextEditingController _namaController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
-
   @override
   void dispose() {
     _namaController.dispose();
@@ -26,9 +25,52 @@ class _RegisterPageState extends State<RegisterPage> {
     _confirmPasswordController.dispose();
     super.dispose();
   }
-
+  Future<void> _handleRegister() async {
+    if (_passwordController.text != _confirmPasswordController.text) {
+      _showError("Konfirmasi password tidak cocok");
+      return;
+    }
+    final deviceIdentifier = await showDialog<String>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => PairingDialog(),
+    );
+    if (deviceIdentifier == null || deviceIdentifier.isEmpty)
+      return; 
+    final deviceName = await showDialog<String>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => WifiDialog(),
+    );
+    if (deviceName == null || deviceName.isEmpty) return; 
+    try {
+      await ref
+          .read(authControllerProvider.notifier)
+          .registerAndProvision(
+            name: _namaController.text,
+            email: _emailController.text,
+            password: _passwordController.text,
+            deviceIdentifier: deviceIdentifier,
+            deviceName: deviceName,
+          );
+    } catch (e) {
+      _showError("Proses registrasi gagal: $e");
+    }
+  }
+  void _showError(String message) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message), backgroundColor: Colors.red),
+    );
+  }
   @override
   Widget build(BuildContext context) {
+    final authState = ref.watch(authControllerProvider);
+    ref.listen(authControllerProvider, (_, state) {
+      if (state is AsyncError) {
+        _showError(state.error.toString());
+      }
+    });
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24.0),
       child: Column(
@@ -36,7 +78,7 @@ class _RegisterPageState extends State<RegisterPage> {
         children: [
           const SizedBox(height: 40),
           const Text(
-            "Buat Akun Baru", 
+            "Buat Akun Baru",
             style: TextStyle(
               fontSize: 28,
               fontWeight: FontWeight.bold,
@@ -47,7 +89,7 @@ class _RegisterPageState extends State<RegisterPage> {
           ),
           const SizedBox(height: 8),
           const Text(
-            "Daftar untuk memulai kontrol aquaponik Anda", 
+            "Daftar untuk memulai kontrol aquaponik Anda",
             style: TextStyle(
               fontSize: 16,
               color: Colors.white,
@@ -112,19 +154,25 @@ class _RegisterPageState extends State<RegisterPage> {
                         borderRadius: BorderRadius.circular(14),
                       ),
                     ),
-                    onPressed: () {
-                      print("Registering...");
-                      widget.onGoToLogin(); 
-                    },
-                    child: Text(
-                      "Daftar",
-                      style: TextStyle(
-                        fontFamily: GoogleFonts.poppins().fontFamily,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 0.5,
-                      ),
-                    ),
+                    onPressed: authState.isLoading ? null : _handleRegister,
+                    child: authState.isLoading
+                        ? const SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 3,
+                              color: Colors.black,
+                            ),
+                          )
+                        : Text(
+                            "Lanjut", 
+                            style: TextStyle(
+                              fontFamily: GoogleFonts.poppins().fontFamily,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 0.5,
+                            ),
+                          ),
                   ),
                 ),
               ],

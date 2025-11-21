@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 class WeekDaySelector extends StatefulWidget {
   const WeekDaySelector({Key? key}) : super(key: key);
-
   @override
   _WeekDaySelectorState createState() => _WeekDaySelectorState();
 }
-
 class _WeekDaySelectorState extends State<WeekDaySelector> {
   int _selectedDayIndex = 2; 
-
   final List<Map<String, String>> days = [
     {"day": "Mon", "date": "5"},
     {"day": "Tue", "date": "6"},
@@ -20,7 +16,6 @@ class _WeekDaySelectorState extends State<WeekDaySelector> {
     {"day": "Sat", "date": "10"},
     {"day": "Sun", "date": "11"},
   ];
-
   @override
   Widget build(BuildContext context) {
     return Container(

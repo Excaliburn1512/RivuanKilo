@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:rivu_v1/colors.dart'; //
-
+import 'package:rivu_v1/colors.dart'; 
 class ListItem extends StatelessWidget {
   final String title;
   final String date;
   final String statusText;
   final bool? isStatusActive; 
-
   const ListItem({
     Key? key,
     required this.title,
@@ -15,7 +13,6 @@ class ListItem extends StatelessWidget {
     required this.statusText,
     this.isStatusActive,
   }) : super(key: key);
-
   Color _getStatusColor() {
     if (isStatusActive == true) {
       return AppColors.primary; 
@@ -25,7 +22,6 @@ class ListItem extends StatelessWidget {
       return Colors.grey[600]!; 
     }
   }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -65,8 +61,6 @@ class ListItem extends StatelessWidget {
             ],
           ),
           SizedBox(height: 8),
-          
-          // Baris 2: Status
           Row(
             children: [
               Text(

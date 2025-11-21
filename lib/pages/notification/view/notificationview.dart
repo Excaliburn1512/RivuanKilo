@@ -2,15 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:rivu_v1/widget/filtertab3.dart';
 import 'package:rivu_v1/widget/listitem.dart';
-import 'package:rivu_v1/colors.dart'; //
-
 class NotificationView extends StatefulWidget {
   const NotificationView({super.key});
-
   @override
   State<NotificationView> createState() => _NotificationViewState();
 }
-
 class _NotificationViewState extends State<NotificationView> {
   int _subFilterIndex = 0;
   final List<Map<String, dynamic>> notifications = [
@@ -21,7 +17,6 @@ class _NotificationViewState extends State<NotificationView> {
     {"title": "System Error", "status": "Pompa kolam rusak"},
     {"title": "Informasi Nutrisi", "status": "Cember Nutrisi Kosong"},
   ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,14 +49,12 @@ class _NotificationViewState extends State<NotificationView> {
               },
             ),
           ),
-
           Expanded(
             child: ListView.builder(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               itemCount: notifications.length,
               itemBuilder: (context, index) {
                 final item = notifications[index];
-
                 return ListItem(
                   title: item['title']!,
                   date: "27/10/2025",

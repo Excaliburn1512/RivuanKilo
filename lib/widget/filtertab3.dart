@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:rivu_v1/colors.dart'; 
-
 class SubFilterBar extends StatelessWidget {
   final int activeIndex;
   final Function(int) onFilterPressed;
-
   const SubFilterBar({
     Key? key,
     required this.activeIndex,
     required this.onFilterPressed,
   }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -30,7 +27,6 @@ class SubFilterBar extends StatelessWidget {
       ),
     );
   }
-
   Widget _buildFilterItem(String title, int index, bool isActive) {
     return Expanded(
       child: InkWell(

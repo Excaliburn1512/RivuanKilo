@@ -2,27 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:rivu_v1/widget/authtextfield.dart';
 import 'package:rivu_v1/widget/passwordindicator.dart';
-
 class ForgotPasswordPage extends StatefulWidget {
   final VoidCallback onGoToLogin;
-
   const ForgotPasswordPage({super.key, required this.onGoToLogin});
-
   @override
   State<ForgotPasswordPage> createState() => _ForgotPasswordPageState();
 }
-
 class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   int _currentStep = 0;
-
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _otpController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
-
   String _password = "";
-
   @override
   void dispose() {
     _emailController.dispose();
@@ -31,7 +24,6 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     _confirmPasswordController.dispose();
     super.dispose();
   }
-
   Widget _buildStepView() {
     switch (_currentStep) {
       case 0:
@@ -44,7 +36,6 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
         return _buildEmailStep();
     }
   }
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -77,7 +68,6 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
       ),
     );
   }
-
   Widget _buildEmailStep() {
     return Column(
       key: ValueKey(0),
@@ -126,7 +116,6 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
       ],
     );
   }
-
   Widget _buildOtpStep() {
     return Column(
       key: ValueKey(1),
@@ -162,7 +151,6 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
       ],
     );
   }
-
   Widget _buildNewPasswordStep() {
     return Column(
       key: ValueKey(2),
@@ -211,7 +199,6 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
       ],
     );
   }
-
   TextStyle _titleStyle() => TextStyle(
     fontSize: 28,
     fontWeight: FontWeight.bold,
@@ -220,7 +207,6 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   );
   TextStyle _subtitleStyle() =>
       TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.w500);
-
   Widget _buildAuthContainer({required Widget child}) {
     return Container(
       padding: const EdgeInsets.all(28.0),
@@ -239,7 +225,6 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
       child: child,
     );
   }
-
   Widget _buildAuthButton({
     required String text,
     required VoidCallback onPressed,

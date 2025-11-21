@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-
 class PlantGridItem extends StatelessWidget {
   const PlantGridItem({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return ClipRRect(

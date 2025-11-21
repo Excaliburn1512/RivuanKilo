@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:rivu_v1/colors.dart'; 
-
 class ToggleBar extends StatelessWidget {
   final bool isTanamanView;
   final VoidCallback? onTanamanPressed;
   final VoidCallback? onKolamPressed;
   final VoidCallback? onPompaPressed;
   final String title;
-
   const ToggleBar({
     Key? key,
     required this.isTanamanView,
@@ -17,7 +15,6 @@ class ToggleBar extends StatelessWidget {
     this.onPompaPressed,
     required this.title,
   }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -46,7 +43,6 @@ class ToggleBar extends StatelessWidget {
       ),
     );
   }
-
   Widget _buildToggleItem(String title, bool isActive, VoidCallback onPressed) {
     return Expanded(
       child: Container(
@@ -56,7 +52,7 @@ class ToggleBar extends StatelessWidget {
           child: AnimatedContainer(
             duration: Duration(milliseconds: 200),
             decoration: BoxDecoration(
-              color: isActive ? AppColors.primary : Colors.white, //
+              color: isActive ? AppColors.primary : Colors.white, 
               borderRadius: BorderRadius.circular(20.0),
             ),
             child: Center(

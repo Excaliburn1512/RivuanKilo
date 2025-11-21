@@ -1,25 +1,18 @@
 import "package:flutter/material.dart";
-import "package:rivu_v1/auth/baseauth.dart";
-import "package:rivu_v1/auth/login/view/viewlogin.dart";
-
+import "package:rivu_v1/auth/view/auth_gate.dart";
 class OnboardingPageData {
   final String title;
   final String description;
-
   OnboardingPageData({required this.title, required this.description});
 }
-
 class Onboarding extends StatefulWidget {
   const Onboarding({super.key});
-
   @override
   State<Onboarding> createState() => _OnboardingState();
 }
-
 class _OnboardingState extends State<Onboarding> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
-
   final List<OnboardingPageData> _pages = [
     OnboardingPageData(
       title: "Selamat Datang di Rivu",
@@ -37,17 +30,14 @@ class _OnboardingState extends State<Onboarding> {
           "Terima peringatan langsung di ponsel Anda jika ada parameter yang keluar dari batas normal.",
     ),
   ];
-
   @override
   void dispose() {
     _pageController.dispose();
     super.dispose();
   }
-
   @override
   Widget build(BuildContext context) {
     bool isLastPage = _currentPage == _pages.length - 1;
-
     return Scaffold(
       body: Stack(
         children: [
@@ -57,7 +47,6 @@ class _OnboardingState extends State<Onboarding> {
               fit: BoxFit.cover,
             ),
           ),
-
           SafeArea(
             child: Column(
               children: [
@@ -122,7 +111,7 @@ class _OnboardingState extends State<Onboarding> {
                               PageRouteBuilder(
                                 pageBuilder:
                                     (context, animation, secondaryAnimation) =>
-                                        const AuthPage(),
+                                        const AuthGate(),
                                 transitionDuration: const Duration(
                                   milliseconds: 1500,
                                 ),
@@ -136,7 +125,6 @@ class _OnboardingState extends State<Onboarding> {
                                       const begin = Offset(0.0, 1.0);
                                       const end = Offset.zero;
                                       final curve = Curves.ease;
-
                                       final tween = Tween(
                                         begin: begin,
                                         end: end,
@@ -144,7 +132,6 @@ class _OnboardingState extends State<Onboarding> {
                                       final offsetAnimation = animation.drive(
                                         tween,
                                       );
-
                                       return SlideTransition(
                                         position: offsetAnimation,
                                         child: ClipRRect(
@@ -184,7 +171,6 @@ class _OnboardingState extends State<Onboarding> {
       ),
     );
   }
-
   Widget _buildPageContent(OnboardingPageData page) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -211,7 +197,6 @@ class _OnboardingState extends State<Onboarding> {
       ),
     );
   }
-
   Widget _buildPageIndicator() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,

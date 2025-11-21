@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 class Authtextfield extends StatefulWidget {
   final String hintText;
   final IconData? icon;
   final bool isPassword;
   final TextEditingController controller;
   final Function(String)? onChanged;
-
   const Authtextfield({
     super.key,
     required this.hintText,
@@ -16,14 +14,11 @@ class Authtextfield extends StatefulWidget {
     required this.controller,
     this.onChanged,
   });
-
   @override
   State<Authtextfield> createState() => _AuthtextfieldState();
 }
-
 class _AuthtextfieldState extends State<Authtextfield> {
   bool _isObscure = true;
-
   @override
   Widget build(BuildContext context) {
     return TextField(
@@ -34,7 +29,6 @@ class _AuthtextfieldState extends State<Authtextfield> {
         fontFamily: GoogleFonts.poppins().fontFamily,
         color: Colors.white,
       ),
-
       decoration: InputDecoration(
         filled: true,
         fillColor: Colors.white.withOpacity(0.1),
@@ -42,7 +36,7 @@ class _AuthtextfieldState extends State<Authtextfield> {
         hintText: widget.hintText,
         hintStyle: TextStyle(
           fontFamily: GoogleFonts.poppins().fontFamily,
-          color: Colors.white.withOpacity(0.6),
+          color: Colors.white,
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),

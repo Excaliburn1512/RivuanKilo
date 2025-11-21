@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-
 class GridItemCard extends StatelessWidget {
   final Widget child; 
   final VoidCallback onTap; 
-
   const GridItemCard({Key? key, required this.child, required this.onTap})
     : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return InkWell(

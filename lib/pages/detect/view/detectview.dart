@@ -1,24 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:rivu_v1/colors.dart';
-
+import 'package:rivu_v1/core/services/firebase_service.dart';
+import 'package:rivu_v1/models/device_data.dart';
 import 'package:rivu_v1/widget/togglebar.dart';
 import 'package:rivu_v1/widget/detect/weekdayselector.dart';
 import 'package:rivu_v1/widget/infocard.dart';
 import 'package:rivu_v1/widget/systemstatusbanner.dart';
 import 'package:rivu_v1/widget/detect/livecameraview.dart';
 import 'package:rivu_v1/widget/detect/plantgriditem.dart';
-
-class DetectPage extends StatefulWidget {
+class DetectPage extends ConsumerStatefulWidget {
   const DetectPage({super.key});
-
   @override
-  State<DetectPage> createState() => _DetectPageState();
+  ConsumerState<DetectPage> createState() => _DetectPageState();
 }
-
-class _DetectPageState extends State<DetectPage> {
+class _DetectPageState extends ConsumerState<DetectPage> {
   bool _isTanamanView = true;
-
   Widget _buildSectionTitle(String title) {
     return Padding(
       padding: const EdgeInsets.only(top: 15.0),
@@ -32,9 +30,9 @@ class _DetectPageState extends State<DetectPage> {
       ),
     );
   }
-
   @override
   Widget build(BuildContext context) {
+    final deviceDataAsync = ref.watch(deviceStreamProvider);
     return SingleChildScrollView(
       padding: const EdgeInsets.all(30.0),
       child: Column(
@@ -57,18 +55,42 @@ class _DetectPageState extends State<DetectPage> {
           ),
           SizedBox(height: 10),
           WeekDaySelector(),
-          AnimatedSwitcher(
-            duration: Duration(milliseconds: 300),
-            child: _isTanamanView
-                ? _buildTanamanView()
-                : _buildKolamView(), 
+          deviceDataAsync.when(
+            data: (data) => AnimatedSwitcher(
+              duration: Duration(milliseconds: 300),
+              child: _isTanamanView
+                  ? _buildTanamanView(data) 
+                  : _buildKolamView(data), 
+            ),
+            loading: () => const Padding(
+              padding: EdgeInsets.only(top: 50.0),
+              child: Center(child: CircularProgressIndicator()),
+            ),
+            error: (e, s) => Padding(
+              padding: const EdgeInsets.only(top: 50.0),
+              child: Center(child: Text("Gagal memuat data: $e")),
+            ),
           ),
         ],
       ),
     );
   }
-
-  Widget _buildTanamanView() {
+  Widget _buildTanamanView(DeviceData data) {
+    final sensor = data.sensorValue;
+    final aktuator = data.aktuatorStatus;
+    final suhuUdara = (sensor.suhuUdara ?? "").isEmpty
+        ? "N/A"
+        : sensor.suhuUdara!;
+    final intensitas = (sensor.intensitasCahaya ?? "").isEmpty
+        ? "N/A"
+        : sensor.intensitasCahaya!;
+    final permukaan_nutrisi = (sensor.permukaanNutrisi ?? "").isEmpty
+        ? "N/A"
+        : sensor.permukaanNutrisi!;
+    final tdsNutrisi = (sensor.tdsNutrisi ?? "").isEmpty
+        ? "N/A"
+        : sensor.tdsNutrisi!;
+    final pompaNutrisiStatus = aktuator.pompaNutrisi == "on";
     return Column(
       key: ValueKey('tanaman'),
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -94,8 +116,8 @@ class _DetectPageState extends State<DetectPage> {
                 icon: Icons.thermostat,
                 iconColor: Colors.red.shade400,
                 title: "Suhu Udara",
-                value: "28",
-                unit: "°C",
+                value: suhuUdara, 
+                unit: suhuUdara == "N/A" ? "" : "°C",
               ),
             ),
             SizedBox(width: 16),
@@ -103,9 +125,33 @@ class _DetectPageState extends State<DetectPage> {
               child: InfoCard(
                 icon: Icons.water_drop_outlined,
                 iconColor: Colors.blue.shade400,
-                title: "TDS",
-                value: "950",
-                unit: "ppm",
+                title: "TDS Nutrisi", 
+                value: tdsNutrisi, 
+                unit: tdsNutrisi == "N/A" ? "" : "ppm",
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 16),
+        Row(
+          children: [
+            Expanded(
+              child: InfoCard(
+                icon: Icons.height,
+                iconColor: Colors.green.shade600,
+                title: "Permukaan Nutrisi",
+                value: permukaan_nutrisi, 
+                unit: "cm",
+              ),
+            ),
+            SizedBox(width: 16),
+            Expanded(
+              child: InfoCard(
+                icon: Icons.water_drop_outlined,
+                iconColor: Colors.blue.shade400,
+                title: "Kelembapan", 
+                value: tdsNutrisi, 
+                unit: tdsNutrisi == "N/A" ? "" : "°C",
               ),
             ),
           ],
@@ -114,23 +160,33 @@ class _DetectPageState extends State<DetectPage> {
         InfoCard(
           icon: Icons.height,
           iconColor: Colors.green.shade600,
-          title: "Permukaan Nutrisi",
-          value: "5",
-          unit: "cm",
+          title: "Intensitas Cahaya",
+          value: intensitas, 
+          unit: "lux",
         ),
         _buildSectionTitle("Status Sensor"),
         SystemStatusBanner(
           judul: "Status Pompa Nutrisi",
-          ficon: Icons.local_drink, 
-          ricon: Icons.check_circle,
-          text: "Aktif",
-          color: AppColors.primary,
+          ficon: Icons.local_drink,
+          ricon: pompaNutrisiStatus ? Icons.check_circle : Icons.cancel,
+          text: pompaNutrisiStatus ? "Aktif" : "Non-Aktif",
+          color: pompaNutrisiStatus ? AppColors.primary : Colors.grey,
         ),
       ],
     );
   }
-
-  Widget _buildKolamView() {
+  Widget _buildKolamView(DeviceData data) {
+    final sensor = data.sensorValue;
+    final aktuator = data.aktuatorStatus;
+    final permukaan_kolam = (sensor.permukaanNutrisi ?? "").isEmpty
+        ? "N/A"
+        : sensor.permukaanKolam!;
+    final suhuAir = (sensor.suhuUdara ?? "").isEmpty
+        ? "N/A"
+        : sensor.suhuUdara!;
+    final tdsKolam = (sensor.tdsKolam ?? "").isEmpty ? "N/A" : sensor.tdsKolam!;
+    final phKolam = (sensor.phKolam ?? "").isEmpty ? "N/A" : sensor.phKolam!;
+    final pompaKolamStatus = aktuator.pompaKolam == "on";
     return Column(
       key: ValueKey('kolam'),
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -144,9 +200,9 @@ class _DetectPageState extends State<DetectPage> {
               child: InfoCard(
                 icon: Icons.thermostat,
                 iconColor: Colors.red.shade400,
-                title: "Suhu Air",
-                value: "28",
-                unit: "°C",
+                title: "Suhu Air", 
+                value: suhuAir, 
+                unit: suhuAir == "N/A" ? "" : "°C",
               ),
             ),
             SizedBox(width: 16),
@@ -154,9 +210,9 @@ class _DetectPageState extends State<DetectPage> {
               child: InfoCard(
                 icon: Icons.water_drop_outlined,
                 iconColor: Colors.blue.shade400,
-                title: "TDS",
-                value: "950",
-                unit: "ppm",
+                title: "TDS Kolam", 
+                value: tdsKolam, 
+                unit: tdsKolam == "N/A" ? "" : "ppm",
               ),
             ),
           ],
@@ -169,7 +225,7 @@ class _DetectPageState extends State<DetectPage> {
                 icon: Icons.science_outlined,
                 iconColor: Colors.purple.shade400,
                 title: "pH Kolam",
-                value: "7,5",
+                value: phKolam, 
                 unit: "",
               ),
             ),
@@ -179,7 +235,7 @@ class _DetectPageState extends State<DetectPage> {
                 icon: Icons.height,
                 iconColor: Colors.green.shade600,
                 title: "Permukaan Kolam ",
-                value: "5",
+                value: permukaan_kolam,
                 unit: "cm",
               ),
             ),
@@ -188,10 +244,10 @@ class _DetectPageState extends State<DetectPage> {
         _buildSectionTitle("Status Sensor"),
         SystemStatusBanner(
           judul: "Status Pompa Kolam",
-          text: "Aktif",
-          color: AppColors.primary,
-          ficon: Icons.water, 
-          ricon: Icons.check_circle,
+          text: pompaKolamStatus ? "Aktif" : "Non-Aktif",
+          color: pompaKolamStatus ? AppColors.primary : Colors.grey,
+          ficon: Icons.water,
+          ricon: pompaKolamStatus ? Icons.check_circle : Icons.cancel,
         ),
       ],
     );

@@ -1,38 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:rivu_v1/auth/baseauth.dart';
+import 'package:rivu_v1/auth/view/auth_gate.dart'; 
 import 'package:rivu_v1/home.dart';
 import 'package:rivu_v1/pages/notification/view/notificationview.dart';
 import 'package:rivu_v1/splash.dart';
-import 'package:rivu_v1/usermodel.dart';
-
 class AppRoutes {
-  static const String splash = '/';
+  static const String authGate = '/'; 
   static const String auth = '/auth';
   static const String home = '/home';
   static const String profile = '/profile';
   static const String detect = '/detect';
   static const String notification = '/notifications';
   static const String history = '/history';
-  static const String initial = splash;
+  static const String splash = '/splash';
+  static const String initial = authGate; 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
-      case splash:
-        return MaterialPageRoute(builder: (_) => Splash());
+      case splash: 
+        return MaterialPageRoute(builder: (_) => const Splash());
+      case authGate:
+        return MaterialPageRoute(builder: (_) => const AuthGate());
       case home:
-        final user = settings.arguments as Usermodel?;
-
-        if (user != null) {
-          return MaterialPageRoute(builder: (_) => Home(user: user));
-        }
-
-        return MaterialPageRoute(
-          builder: (_) => _ErrorScreen(routeName: "Home (Data User Hilang)"),
-        );
+        return MaterialPageRoute(builder: (_) => const Home());
       case auth:
-        return MaterialPageRoute(builder: (_) => AuthPage());
+        return MaterialPageRoute(builder: (_) => const AuthPage());
       case notification:
-        return MaterialPageRoute(builder: (_) => NotificationView());
-
+        return MaterialPageRoute(builder: (_) => const NotificationView());
       default:
         return MaterialPageRoute(
           builder: (_) => _ErrorScreen(routeName: settings.name),
@@ -40,11 +33,9 @@ class AppRoutes {
     }
   }
 }
-
 class _ErrorScreen extends StatelessWidget {
   final String? routeName;
   const _ErrorScreen({Key? key, this.routeName}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:rivu_v1/colors.dart';
-
 class PairingButton extends StatelessWidget {
   final VoidCallback onPressed;
-
   const PairingButton({Key? key, required this.onPressed}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return InkWell(

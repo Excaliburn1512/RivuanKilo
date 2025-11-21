@@ -1,20 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:rivu_v1/widget/togglebar.dart';
 import 'package:rivu_v1/widget/filtertab3.dart';
 import 'package:rivu_v1/widget/listitem.dart';
-
 class HistoryView extends StatefulWidget {
   const HistoryView({super.key});
-
   @override
   State<HistoryView> createState() => _HistoryViewState();
 }
-
 class _HistoryViewState extends State<HistoryView> {
   bool _isTanamanView = true;
   int _subFilterIndex = 0;
-
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -57,7 +52,6 @@ class _HistoryViewState extends State<HistoryView> {
       ),
     );
   }
-
   Widget _buildTanamanList() {
     final List<Map<String, String>> tanamanHistory = [
       {
@@ -81,7 +75,6 @@ class _HistoryViewState extends State<HistoryView> {
         "status": "Tanaman mengalami perubahan...",
       },
     ];
-
     return ListView.builder(
       key: ValueKey('tanaman_list'), 
       shrinkWrap: true,
@@ -98,7 +91,6 @@ class _HistoryViewState extends State<HistoryView> {
       },
     );
   }
-
   Widget _buildPompaList() {
     final List<Map<String, dynamic>> pompaHistory = [
       {"title": "Pompa Kolam", "status": "Non Aktif", "active": false},
@@ -108,7 +100,6 @@ class _HistoryViewState extends State<HistoryView> {
       {"title": "Pompa Kolam", "status": "Aktif", "active": true},
       {"title": "Pompa Nutrisi", "status": "Non Aktif", "active": false},
     ];
-
     return ListView.builder(
       key: ValueKey('pompa_list'), 
       shrinkWrap: true,

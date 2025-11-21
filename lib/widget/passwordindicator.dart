@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 enum PasswordStrength { Weak, Medium, Strong }
-
 class PasswordStrengthIndicator extends StatelessWidget {
   final String password;
-
   const PasswordStrengthIndicator({Key? key, required this.password})
     : super(key: key);
-
   PasswordStrength _checkStrength(String pass) {
     if (pass.isEmpty) {
       return PasswordStrength.Weak;
@@ -17,7 +13,6 @@ class PasswordStrengthIndicator extends StatelessWidget {
     bool hasDigits = pass.contains(RegExp(r'[0-9]'));
     bool hasSpecial = pass.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'));
     int length = pass.length;
-
     if (length >= 8 && hasUppercase && hasDigits && hasSpecial) {
       return PasswordStrength.Strong;
     } else if (length >= 6 && (hasUppercase || hasDigits || hasSpecial)) {
@@ -26,13 +21,11 @@ class PasswordStrengthIndicator extends StatelessWidget {
       return PasswordStrength.Weak;
     }
   }
-
   @override
   Widget build(BuildContext context) {
     final strength = _checkStrength(password);
     String strengthText;
     Color weakColor, mediumColor, strongColor;
-
     switch (strength) {
       case PasswordStrength.Weak:
         strengthText = "Lemah";
@@ -53,7 +46,6 @@ class PasswordStrengthIndicator extends StatelessWidget {
         strongColor = Colors.green[700]!;
         break;
     }
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -77,7 +69,6 @@ class PasswordStrengthIndicator extends StatelessWidget {
       ],
     );
   }
-
   Widget _buildIndicatorBar(Color color) {
     return Container(
       height: 4,

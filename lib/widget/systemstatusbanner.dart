@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:rivu_v1/colors.dart';
-
 class SystemStatusBanner extends StatelessWidget {
   final String? judul;
   final IconData? ficon;
   final IconData? ricon;
   final String? text;
   final Color color;
-
   const SystemStatusBanner({
     Key? key,
     this.judul,
@@ -17,7 +15,6 @@ class SystemStatusBanner extends StatelessWidget {
     this.text,
     required this.color,
   }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Container(

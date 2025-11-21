@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "456312090123",
+    "firebase_url": "https://rivu-4cf24-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "rivu-4cf24",
+    "storage_bucket": "rivu-4cf24.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:456312090123:android:db6694d570e3f12484a10e",
+        "android_client_info": {
+          "package_name": "com.example.rivu_v1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "456312090123-3nc5i9jlgpciafrg7pkn758e1togf5lu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAyr6RWgV-ynrN0cCiZaog3EskFwhNldW8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "456312090123-3nc5i9jlgpciafrg7pkn758e1togf5lu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

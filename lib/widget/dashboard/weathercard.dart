@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:rivu_v1/colors.dart';
-
 class WeatherCard extends StatelessWidget {
   const WeatherCard({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -48,7 +46,6 @@ class WeatherCard extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                
                   Text(
                     "Kel. Kauman Kab Nganjuk",
                     style: GoogleFonts.poppins(
@@ -65,7 +62,6 @@ class WeatherCard extends StatelessWidget {
                       color: AppColors.primary, 
                     ),
                   ),
-              
                 ],
               ),
               const Spacer(),

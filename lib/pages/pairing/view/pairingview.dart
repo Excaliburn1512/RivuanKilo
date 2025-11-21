@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-
 class PairingView extends StatefulWidget {
   const PairingView({super.key});
-
   @override
   State<PairingView> createState() => _PairingViewState();
 }
