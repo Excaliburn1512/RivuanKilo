@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:rivu_v1/auth/repository/auth_repository.dart';
 import 'package:rivu_v1/widget/authtextfield.dart';
 import 'package:rivu_v1/widget/passwordindicator.dart';
-class ForgotPasswordPage extends StatefulWidget {
+class ForgotPasswordPage extends ConsumerStatefulWidget {
   final VoidCallback onGoToLogin;
   const ForgotPasswordPage({super.key, required this.onGoToLogin});
   @override
-  State<ForgotPasswordPage> createState() => _ForgotPasswordPageState();
+  ConsumerState<ForgotPasswordPage> createState() => _ForgotPasswordPageState();
 }
-class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
+class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage> {
   int _currentStep = 0;
+  bool _isLoading = false; 
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _otpController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
-  String _password = "";
+  String _password = ""; 
   @override
   void dispose() {
     _emailController.dispose();
@@ -23,6 +26,87 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     _passwordController.dispose();
     _confirmPasswordController.dispose();
     super.dispose();
+  }
+  void _setLoading(bool value) {
+    if (mounted) setState(() => _isLoading = value);
+  }
+  void _showSnackbar(String message, {bool isError = false}) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: isError ? Colors.red : Colors.green,
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
+  Future<void> _handleSendOtp() async {
+    final email = _emailController.text.trim();
+    if (email.isEmpty) {
+      _showSnackbar("Email wajib diisi", isError: true);
+      return;
+    }
+    _setLoading(true);
+    try {
+      await ref.read(authRepositoryProvider).requestOtp(email);
+      _showSnackbar("Kode OTP telah dikirim ke $email");
+      setState(() {
+        _currentStep = 1; 
+      });
+    } catch (e) {
+      _showSnackbar(e.toString().replaceAll("Exception: ", ""), isError: true);
+    } finally {
+      _setLoading(false);
+    }
+  }
+  Future<void> _handleVerifyOtp() async {
+    final otp = _otpController.text.trim();
+    if (otp.isEmpty) {
+      _showSnackbar("Kode OTP wajib diisi", isError: true);
+      return;
+    }
+    _setLoading(true);
+    try {
+      await ref
+          .read(authRepositoryProvider)
+          .verifyOtp(_emailController.text.trim(), otp);
+      _showSnackbar("OTP Valid! Silakan buat password baru.");
+      setState(() {
+        _currentStep = 2; 
+      });
+    } catch (e) {
+      _showSnackbar("Kode OTP salah atau kadaluarsa", isError: true);
+    } finally {
+      _setLoading(false);
+    }
+  }
+  Future<void> _handleResetPassword() async {
+    final newPass = _passwordController.text;
+    final confirmPass = _confirmPasswordController.text;
+    if (newPass.isEmpty) {
+      _showSnackbar("Password baru wajib diisi", isError: true);
+      return;
+    }
+    if (newPass != confirmPass) {
+      _showSnackbar("Konfirmasi password tidak cocok", isError: true);
+      return;
+    }
+    _setLoading(true);
+    try {
+      await ref
+          .read(authRepositoryProvider)
+          .resetPassword(
+            _emailController.text.trim(),
+            _otpController.text.trim(),
+            newPass,
+          );
+      _showSnackbar("Password berhasil diubah. Silakan login.");
+      widget.onGoToLogin();
+    } catch (e) {
+      _showSnackbar("Gagal mereset password: $e", isError: true);
+    } finally {
+      _setLoading(false);
+    }
   }
   Widget _buildStepView() {
     switch (_currentStep) {
@@ -53,7 +137,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
           ),
           const SizedBox(height: 24),
           TextButton(
-            onPressed: widget.onGoToLogin, 
+            onPressed: _isLoading ? null : widget.onGoToLogin,
             child: Text(
               "Kembali ke Login",
               style: TextStyle(
@@ -102,14 +186,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                 controller: _emailController,
               ),
               SizedBox(height: 24),
-              _buildAuthButton(
-                text: "Kirim OTP",
-                onPressed: () {
-                  setState(() {
-                    _currentStep = 1;
-                  }); 
-                },
-              ),
+              _buildAuthButton(text: "Kirim OTP", onPressed: _handleSendOtp),
             ],
           ),
         ),
@@ -123,7 +200,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
         Text("Verifikasi Email", style: _titleStyle()),
         SizedBox(height: 8),
         Text(
-          "Masukkan kode 6 digit yang dikirim ke email Anda",
+          "Masukkan kode OTP yang dikirim ke email Anda",
           style: _subtitleStyle(),
           textAlign: TextAlign.center,
         ),
@@ -137,14 +214,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                 controller: _otpController,
               ),
               SizedBox(height: 24),
-              _buildAuthButton(
-                text: "Verifikasi",
-                onPressed: () {
-                  setState(() {
-                    _currentStep = 2;
-                  }); 
-                },
-              ),
+              _buildAuthButton(text: "Verifikasi", onPressed: _handleVerifyOtp),
             ],
           ),
         ),
@@ -189,9 +259,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
               SizedBox(height: 24),
               _buildAuthButton(
                 text: "Simpan Password",
-                onPressed: () {
-                  widget.onGoToLogin();
-                },
+                onPressed: _handleResetPassword,
               ),
             ],
           ),
@@ -240,16 +308,25 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
             borderRadius: BorderRadius.circular(14),
           ),
         ),
-        onPressed: onPressed,
-        child: Text(
-          text,
-          style: TextStyle(
-            fontFamily: GoogleFonts.poppins().fontFamily,
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 0.5,
-          ),
-        ),
+        onPressed: _isLoading ? null : onPressed,
+        child: _isLoading
+            ? SizedBox(
+                height: 20,
+                width: 20,
+                child: CircularProgressIndicator(
+                  strokeWidth: 3,
+                  color: Colors.black,
+                ),
+              )
+            : Text(
+                text,
+                style: TextStyle(
+                  fontFamily: GoogleFonts.poppins().fontFamily,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 0.5,
+                ),
+              ),
       ),
     );
   }

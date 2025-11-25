@@ -1,5 +1,6 @@
 
 import 'dart:async';
+import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rivu_v1/auth/repository/auth_repository.dart';
 import 'package:rivu_v1/auth/model/auth_state.dart';
@@ -36,6 +37,35 @@ class AuthController extends AsyncNotifier<AuthState> {
       state = AsyncValue.data(authState);
     } catch (e, s) {
       state = AsyncValue.error(e, s);
+    }
+  }
+  Future<void> updateProfile(String fullName) async {
+    final currentUser = state.valueOrNull?.user;
+    if (currentUser == null) return;
+    state = const AsyncValue.loading();
+    try {
+      final updatedUser = await _authRepository.updateProfile(fullName);
+      state = AsyncValue.data(
+        AuthState(user: updatedUser, systems: state.valueOrNull?.systems),
+      );
+    } catch (e, s) {
+      state = AsyncValue.error(e, s);
+    }
+  }
+  Future<void> changePassword(String oldPassword, String newPassword) async {
+    await _authRepository.changePassword(oldPassword, newPassword);
+  }
+  Future<void> uploadAvatar(File imageFile) async {
+    final currentUser = state.valueOrNull?.user;
+    if (currentUser == null) return;
+    try {
+      final updatedUser = await _authRepository.uploadAvatar(imageFile);
+      state = AsyncValue.data(
+        AuthState(user: updatedUser, systems: state.valueOrNull?.systems),
+      );
+    } catch (e) {
+      print("Upload avatar failed: $e");
+      rethrow;
     }
   }
   Future<void> registerAndProvision({

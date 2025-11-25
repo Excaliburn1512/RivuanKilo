@@ -7,7 +7,7 @@ import 'package:rivu_v1/auth/controller/auth_controller.dart';
 import 'package:rivu_v1/models/device_data.dart'; 
 final firebaseDatabaseProvider = Provider<FirebaseDatabase>((ref) {
   const databaseURL =
-      "https:https://rivu-4cf24-default-rtdb.asia-southeast1.firebasedatabase.app";
+      "https://rivu-4cf24-default-rtdb.asia-southeast1.firebasedatabase.app/";
   return FirebaseDatabase.instanceFor(
     app: Firebase.app(),
     databaseURL: databaseURL,

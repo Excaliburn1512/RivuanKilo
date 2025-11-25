@@ -10,7 +10,9 @@ class UserModel {
   final String email;
   @JsonKey(name: 'full_name')
   final String? fullName;
-  UserModel({required this.userId, required this.email, this.fullName});
+  @JsonKey(name: 'profile_picture') 
+  final String? profilePicture;
+  UserModel({required this.userId, required this.email, this.fullName,this.profilePicture});
   String get displayName => fullName ?? 'User';
   factory UserModel.fromJson(Map<String, dynamic> json) =>
       _$UserModelFromJson(json);

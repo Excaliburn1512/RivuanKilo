@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart'; 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:rivu_v1/auth/controller/auth_controller.dart'; 
+import 'package:rivu_v1/auth/controller/auth_controller.dart';
 import 'package:rivu_v1/colors.dart';
+import 'package:rivu_v1/core/services/weather_service.dart';
 import 'package:rivu_v1/widget/dashboard/dashboardbanner.dart';
 import 'package:rivu_v1/widget/dashboard/weathercard.dart';
 import 'package:rivu_v1/widget/systemstatusbanner.dart';
@@ -26,6 +27,11 @@ class Dashboard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authControllerProvider);
     final userName = authState.valueOrNull?.user?.displayName ?? "User";
+    final weatherAsync = ref.watch(weatherFutureProvider);
+    String currentCondition = "Clear";
+    if (weatherAsync.hasValue) {
+      currentCondition = weatherAsync.value!.weather.first.main;
+    }
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -33,12 +39,33 @@ class Dashboard extends ConsumerWidget {
             clipBehavior: Clip.none,
             alignment: Alignment.topCenter,
             children: [
-              DashboardHeader(userName: userName),
+              DashboardHeader(
+                userName: userName,
+              ),
               Positioned(
                 top: 160,
                 child: Container(
                   width: MediaQuery.of(context).size.width * 0.85,
-                  child: WeatherCard(),
+                  child: weatherAsync.when(
+                    data: (weather) => WeatherCard(
+                      temp: "${weather.main.temp.toStringAsFixed(0)}°c",
+                      location: weather.name,
+                      condition: weather
+                          .weather
+                          .first
+                          .main, 
+                    ),
+                    loading: () => const WeatherCard(
+                      temp: "--",
+                      location: "Sedang memuat...",
+                      condition: "Clear", 
+                    ),
+                    error: (err, stack) => const WeatherCard(
+                      temp: "-",
+                      location: "Gagal memuat",
+                      condition: "Storm", 
+                    ),
+                  ),
                 ),
               ),
             ],

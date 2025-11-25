@@ -59,8 +59,8 @@ class _DetectPageState extends ConsumerState<DetectPage> {
             data: (data) => AnimatedSwitcher(
               duration: Duration(milliseconds: 300),
               child: _isTanamanView
-                  ? _buildTanamanView(data) 
-                  : _buildKolamView(data), 
+                  ? _buildTanamanView(data)
+                  : _buildKolamView(data),
             ),
             loading: () => const Padding(
               padding: EdgeInsets.only(top: 50.0),
@@ -116,7 +116,7 @@ class _DetectPageState extends ConsumerState<DetectPage> {
                 icon: Icons.thermostat,
                 iconColor: Colors.red.shade400,
                 title: "Suhu Udara",
-                value: suhuUdara, 
+                value: suhuUdara,
                 unit: suhuUdara == "N/A" ? "" : "°C",
               ),
             ),
@@ -125,8 +125,8 @@ class _DetectPageState extends ConsumerState<DetectPage> {
               child: InfoCard(
                 icon: Icons.water_drop_outlined,
                 iconColor: Colors.blue.shade400,
-                title: "TDS Nutrisi", 
-                value: tdsNutrisi, 
+                title: "TDS Nutrisi",
+                value: tdsNutrisi,
                 unit: tdsNutrisi == "N/A" ? "" : "ppm",
               ),
             ),
@@ -140,7 +140,7 @@ class _DetectPageState extends ConsumerState<DetectPage> {
                 icon: Icons.height,
                 iconColor: Colors.green.shade600,
                 title: "Permukaan Nutrisi",
-                value: permukaan_nutrisi, 
+                value: permukaan_nutrisi,
                 unit: "cm",
               ),
             ),
@@ -149,8 +149,8 @@ class _DetectPageState extends ConsumerState<DetectPage> {
               child: InfoCard(
                 icon: Icons.water_drop_outlined,
                 iconColor: Colors.blue.shade400,
-                title: "Kelembapan", 
-                value: tdsNutrisi, 
+                title: "Kelembapan",
+                value: tdsNutrisi,
                 unit: tdsNutrisi == "N/A" ? "" : "°C",
               ),
             ),
@@ -161,7 +161,7 @@ class _DetectPageState extends ConsumerState<DetectPage> {
           icon: Icons.height,
           iconColor: Colors.green.shade600,
           title: "Intensitas Cahaya",
-          value: intensitas, 
+          value: intensitas,
           unit: "lux",
         ),
         _buildSectionTitle("Status Sensor"),
@@ -192,7 +192,7 @@ class _DetectPageState extends ConsumerState<DetectPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildSectionTitle("Live Kamera"),
-        LiveCameraView(),
+        LiveCameraView(deviceId: "Cam_001"),
         _buildSectionTitle("Informasi sensor"),
         Row(
           children: [
@@ -200,8 +200,8 @@ class _DetectPageState extends ConsumerState<DetectPage> {
               child: InfoCard(
                 icon: Icons.thermostat,
                 iconColor: Colors.red.shade400,
-                title: "Suhu Air", 
-                value: suhuAir, 
+                title: "Suhu Air",
+                value: suhuAir,
                 unit: suhuAir == "N/A" ? "" : "°C",
               ),
             ),
@@ -210,8 +210,8 @@ class _DetectPageState extends ConsumerState<DetectPage> {
               child: InfoCard(
                 icon: Icons.water_drop_outlined,
                 iconColor: Colors.blue.shade400,
-                title: "TDS Kolam", 
-                value: tdsKolam, 
+                title: "TDS Kolam",
+                value: tdsKolam,
                 unit: tdsKolam == "N/A" ? "" : "ppm",
               ),
             ),
@@ -225,7 +225,7 @@ class _DetectPageState extends ConsumerState<DetectPage> {
                 icon: Icons.science_outlined,
                 iconColor: Colors.purple.shade400,
                 title: "pH Kolam",
-                value: phKolam, 
+                value: phKolam,
                 unit: "",
               ),
             ),

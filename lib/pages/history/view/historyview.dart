@@ -1,54 +1,68 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rivu_v1/core/api/auth_api_client.dart';
+import 'package:rivu_v1/core/services/firebase_service.dart';
+import 'package:rivu_v1/models/history_model.dart';
 import 'package:rivu_v1/widget/togglebar.dart';
 import 'package:rivu_v1/widget/filtertab3.dart';
 import 'package:rivu_v1/widget/listitem.dart';
-class HistoryView extends StatefulWidget {
+import 'package:intl/intl.dart';
+final historyLogProvider = FutureProvider.autoDispose<List<HistoryModel>>((
+  ref,
+) async {
+  final systemId = ref.watch(currentSystemIdProvider);
+  if (systemId == null) return [];
+  return ref.watch(authApiClientProvider).getHistoryLogs(systemId);
+});
+class HistoryView extends ConsumerStatefulWidget {
   const HistoryView({super.key});
   @override
-  State<HistoryView> createState() => _HistoryViewState();
+  ConsumerState<HistoryView> createState() => _HistoryViewState();
 }
-class _HistoryViewState extends State<HistoryView> {
+class _HistoryViewState extends ConsumerState<HistoryView> {
   bool _isTanamanView = true;
   int _subFilterIndex = 0;
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(30.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(height: 30),
-          ToggleBar(
-            title: "History",
-            isTanamanView: _isTanamanView,
-            onTanamanPressed: () {
-              setState(() {
-                _isTanamanView = true;
-              });
-            },
-            onPompaPressed: () {
-              setState(() {
-                _isTanamanView = false;
-              });
-            },
+    final historyAsync = ref.watch(historyLogProvider);
+    return Scaffold(
+      body: RefreshIndicator(
+        onRefresh: () async => ref.refresh(historyLogProvider),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(30.0),
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 30),
+              ToggleBar(
+                title: "History",
+                isTanamanView: _isTanamanView,
+                onTanamanPressed: () => setState(() => _isTanamanView = true),
+                onPompaPressed: () => setState(() => _isTanamanView = false),
+              ),
+              const SizedBox(height: 16),
+              SubFilterBar(
+                activeIndex: _subFilterIndex,
+                onFilterPressed: (index) =>
+                    setState(() => _subFilterIndex = index),
+              ),
+              const SizedBox(height: 10),
+              AnimatedSwitcher(
+                duration: const Duration(milliseconds: 300),
+                child: _isTanamanView
+                    ? _buildTanamanList() 
+                    : historyAsync.when(
+                        data: (logs) => _buildPompaListFromApi(logs),
+                        loading: () =>
+                            const Center(child: CircularProgressIndicator()),
+                        error: (err, stack) =>
+                            Center(child: Text('Error: $err')),
+                      ),
+              ),
+            ],
           ),
-          SizedBox(height: 16),
-          SubFilterBar(
-            activeIndex: _subFilterIndex,
-            onFilterPressed: (index) {
-              setState(() {
-                _subFilterIndex = index;
-              });
-            },
-          ),
-          SizedBox(height: 10),
-          AnimatedSwitcher(
-            duration: Duration(milliseconds: 300),
-            child: _isTanamanView
-                ? _buildTanamanList() 
-                : _buildPompaList(),
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -91,28 +105,32 @@ class _HistoryViewState extends State<HistoryView> {
       },
     );
   }
-  Widget _buildPompaList() {
-    final List<Map<String, dynamic>> pompaHistory = [
-      {"title": "Pompa Kolam", "status": "Non Aktif", "active": false},
-      {"title": "Pompa Kolam", "status": "Aktif", "active": true},
-      {"title": "Pompa Nutrisi", "status": "Non Aktif", "active": false},
-      {"title": "Pompa Nutrisi", "status": "Aktif", "active": true},
-      {"title": "Pompa Kolam", "status": "Aktif", "active": true},
-      {"title": "Pompa Nutrisi", "status": "Non Aktif", "active": false},
-    ];
+  Widget _buildPompaListFromApi(List<HistoryModel> logs) {
+    if (logs.isEmpty) {
+      return const Center(
+        child: Padding(
+          padding: EdgeInsets.all(20.0),
+          child: Text("Belum ada riwayat aktivitas."),
+        ),
+      );
+    }
     return ListView.builder(
-      key: ValueKey('pompa_list'), 
+      key: const ValueKey('pompa_list_api'),
       shrinkWrap: true,
-      padding: EdgeInsets.zero,
-      physics: NeverScrollableScrollPhysics(),
-      itemCount: pompaHistory.length,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: logs.length,
       itemBuilder: (context, index) {
+        final item = logs[index];
+        String formattedDate = item.createdAt;
+        try {
+          final date = DateTime.parse(item.createdAt).toLocal();
+          formattedDate = DateFormat('dd/MM/yyyy HH:mm').format(date);
+        } catch (_) {}
         return ListItem(
-          title: pompaHistory[index]['title']!,
-          date: "27/10/2025",
-          statusText: pompaHistory[index]['status']!,
-          isStatusActive:
-              pompaHistory[index]['active']!, 
+          title: item.deviceName,
+          date: formattedDate,
+          statusText: item.status,
+          isStatusActive: item.isActive, 
         );
       },
     );

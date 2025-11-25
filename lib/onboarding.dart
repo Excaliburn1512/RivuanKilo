@@ -1,5 +1,5 @@
 import "package:flutter/material.dart";
-import "package:rivu_v1/auth/view/auth_gate.dart";
+import "package:rivu_v1/auth/baseauth.dart";
 class OnboardingPageData {
   final String title;
   final String description;
@@ -111,7 +111,7 @@ class _OnboardingState extends State<Onboarding> {
                               PageRouteBuilder(
                                 pageBuilder:
                                     (context, animation, secondaryAnimation) =>
-                                        const AuthGate(),
+                                        const AuthPage(),
                                 transitionDuration: const Duration(
                                   milliseconds: 1500,
                                 ),

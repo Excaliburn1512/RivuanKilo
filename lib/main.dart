@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rivu_v1/core/route.dart';
-import 'package:firebase_core/firebase_core.dart'; 
-import '../firebase_options.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:rivu_v1/firebase_options.dart'; 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); 
   await Firebase.initializeApp(
@@ -28,7 +28,7 @@ class MainApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       debugShowCheckedModeBanner: false,
-      initialRoute: AppRoutes.initial,
+      initialRoute: AppRoutes.splash,
       onGenerateRoute: AppRoutes.onGenerateRoute,
     );
   }

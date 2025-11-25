@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:rivu_v1/auth/view/auth_gate.dart';
 import 'dart:async';
-import 'package:rivu_v1/onboarding.dart'; 
 class Splash extends StatefulWidget {
   const Splash({super.key});
   @override
@@ -140,7 +140,7 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
         PageRouteBuilder(
           transitionDuration: const Duration(milliseconds: 500), 
           pageBuilder: (context, animation, secondaryAnimation) =>
-              const Onboarding(),
+              const AuthGate(),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             return FadeTransition(opacity: animation, child: child);
           },

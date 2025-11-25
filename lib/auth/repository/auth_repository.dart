@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rivu_v1/core/api/auth_api_client.dart';
@@ -133,6 +134,65 @@ class AuthRepository {
     } catch (e) {
       print("Gagal unlink device: $e");
       rethrow;
+    }
+  }
+  Future<void> requestOtp(String email) async {
+    try {
+      await _authApiClient.forgotPassword({'email': email});
+    } catch (e) {
+      throw Exception("Gagal mengirim OTP: $e");
+    }
+  }
+  Future<void> verifyOtp(String email, String otp) async {
+    try {
+      await _authApiClient.verifyOtp({'email': email, 'otp': otp});
+    } catch (e) {
+      throw Exception("OTP Salah atau Kadaluarsa");
+    }
+  }
+  Future<void> resetPassword(
+    String email,
+    String otp,
+    String newPassword,
+  ) async {
+    try {
+      await _authApiClient.resetPassword({
+        'email': email,
+        'otp': otp,
+        'new_password': newPassword,
+      });
+    } catch (e) {
+      throw Exception("Gagal mereset password: $e");
+    }
+  }
+  Future<UserModel> updateProfile(String fullName) async {
+    try {
+      final response = await _authApiClient.updateProfile({
+        'full_name': fullName,
+      });
+      await _storageService.saveUser(response);
+      return response;
+    } catch (e) {
+      throw Exception("Gagal update profil: $e");
+    }
+  }
+  Future<void> changePassword(String oldPassword, String newPassword) async {
+    try {
+      await _authApiClient.changePassword({
+        'old_password': oldPassword,
+        'new_password': newPassword,
+      });
+    } catch (e) {
+      throw Exception("Gagal ganti password: $e");
+    }
+  }
+  Future<UserModel> uploadAvatar(File file) async {
+    try {
+      final response = await _authApiClient.uploadAvatar(file);
+      await _storageService.saveUser(response);
+      return response;
+    } catch (e) {
+      throw Exception("Gagal upload avatar: $e");
     }
   }
   Future<void> logout() async {
