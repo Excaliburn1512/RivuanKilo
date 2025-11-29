@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rivu_v1/auth/baseauth.dart';
 import 'package:rivu_v1/auth/controller/auth_controller.dart';
+import 'package:rivu_v1/auth/view/viewlogin.dart';
 import 'package:rivu_v1/home.dart';
-import 'package:rivu_v1/onboarding.dart';
+
 class AuthGate extends ConsumerWidget {
   const AuthGate({super.key});
   @override
@@ -15,7 +16,7 @@ class AuthGate extends ConsumerWidget {
         if (state.isLoggedIn) {
           return const Home();
         }
-        return const Onboarding();
+        return const AuthPage();
       },
       loading: () => const Scaffold(
         body: Center(child: CircularProgressIndicator()),

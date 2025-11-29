@@ -1,40 +1,67 @@
-
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter_blue_classic/flutter_blue_classic.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 final flutterBlueProvider = Provider<FlutterBlueClassic>((ref) {
   return FlutterBlueClassic();
 });
+
 final bluetoothServiceProvider = Provider<BluetoothService>((ref) {
   final flutterBlue = ref.watch(flutterBlueProvider);
   return BluetoothService(flutterBlue);
 });
+
 final bluetoothScanProvider = StreamProvider<BluetoothDevice>((ref) {
   final flutterBlue = ref.watch(flutterBlueProvider);
-  return flutterBlue.scanResults; 
+  return flutterBlue.scanResults;
 });
+
 class BluetoothService {
   final FlutterBlueClassic _flutterBlue;
   BluetoothService(this._flutterBlue);
+
   BluetoothConnection? _connection;
-  StreamSubscription? _dataSubscription; 
+  StreamSubscription? _dataSubscription;
+
   Future<void> startScan() async {
     _flutterBlue.startScan();
   }
+
   Future<void> stopScan() async {
-    _flutterBlue.stopScan(); 
+    _flutterBlue.stopScan();
   }
+
+  // --- FUNGSI DARI LIB LAMA (Original) ---
   Future<String> connectToDevice(BluetoothDevice device) async {
-    await stopScan(); 
+    await stopScan();
     try {
-      _connection = await _flutterBlue.connect(device.address); 
-      return device.address; 
+      _connection = await _flutterBlue.connect(device.address);
+      return device.address;
     } catch (e) {
       _connection = null;
       throw Exception("Gagal terhubung ke device: ${e.toString()}");
     }
   }
+
+  // --- FUNGSI TAMBAHAN (Agar bisa Reconnect di ViewRegister) ---
+  Future<void> connectByAddress(String address) async {
+    if (_connection != null && _connection!.isConnected) {
+      // Jika masih nyambung, cek apakah alamatnya sama?
+      // Untuk aman, kita close dulu dan connect ulang agar fresh.
+      await _connection?.close();
+    }
+
+    try {
+      print("🔌 Mencoba menyambung ulang ke $address...");
+      _connection = await _flutterBlue.connect(address);
+      print("✅ Terhubung kembali!");
+    } catch (e) {
+      _connection = null;
+      throw Exception("Gagal menyambung ulang: $e");
+    }
+  }
+
   Future<void> sendWifiCredentials({
     required String deviceName,
     required String ssid,
@@ -74,7 +101,7 @@ class BluetoothService {
     };
     String jsonPayload = jsonEncode(payload);
     try {
-      _connection!.writeString(jsonPayload); 
+      _connection!.writeString(jsonPayload);
       print("Berhasil mengirim data WiFi ke ESP32: $jsonPayload");
       await completer.future.timeout(
         const Duration(seconds: 20),
@@ -91,10 +118,11 @@ class BluetoothService {
       _dataSubscription = null;
     }
   }
+
   Future<void> disconnect() async {
     await _dataSubscription?.cancel();
     _dataSubscription = null;
-    await _connection?.close(); 
+    await _connection?.close();
     _connection = null;
   }
 }

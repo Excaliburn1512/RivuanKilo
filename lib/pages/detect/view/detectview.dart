@@ -2,14 +2,35 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:rivu_v1/colors.dart';
+import 'package:rivu_v1/core/api/auth_api_client.dart';
 import 'package:rivu_v1/core/services/firebase_service.dart';
 import 'package:rivu_v1/models/device_data.dart';
+import 'package:rivu_v1/models/plant_image_model.dart';
 import 'package:rivu_v1/widget/togglebar.dart';
 import 'package:rivu_v1/widget/detect/weekdayselector.dart';
 import 'package:rivu_v1/widget/infocard.dart';
 import 'package:rivu_v1/widget/systemstatusbanner.dart';
 import 'package:rivu_v1/widget/detect/livecameraview.dart';
 import 'package:rivu_v1/widget/detect/plantgriditem.dart';
+final plantImagesProvider = FutureProvider.autoDispose<List<PlantImageModel>>((
+  ref,
+) async {
+  final systemId = ref.watch(currentSystemIdProvider);
+  if (systemId == null) return [];
+
+  // Ambil semua gambar dari API (Backend sudah mengurutkan dari yang terbaru)
+  final allImages = await ref
+      .watch(authApiClientProvider)
+      .getPlantImages(systemId);
+
+  // AMBIL BATCH: Kita hanya ambil 4 foto terbaru (index 0 sampai 3)
+  // Jika jumlah foto kurang dari 4, ambil semuanya.
+  if (allImages.length > 4) {
+    return allImages.sublist(0, 4);
+  } else {
+    return allImages;
+  }
+});
 class DetectPage extends ConsumerStatefulWidget {
   const DetectPage({super.key});
   @override
@@ -75,9 +96,10 @@ class _DetectPageState extends ConsumerState<DetectPage> {
       ),
     );
   }
-  Widget _buildTanamanView(DeviceData data) {
+ Widget _buildTanamanView(DeviceData data) {
     final sensor = data.sensorValue;
     final aktuator = data.aktuatorStatus;
+    // ... (variabel sensor sama seperti sebelumnya)
     final suhuUdara = (sensor.suhuUdara ?? "").isEmpty
         ? "N/A"
         : sensor.suhuUdara!;
@@ -91,24 +113,64 @@ class _DetectPageState extends ConsumerState<DetectPage> {
         ? "N/A"
         : sensor.tdsNutrisi!;
     final pompaNutrisiStatus = aktuator.pompaNutrisi == "on";
+
+    // PANGGIL PROVIDER GAMBAR DI SINI
+    final imagesAsync = ref.watch(plantImagesProvider);
+
     return Column(
       key: ValueKey('tanaman'),
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionTitle("Baris 1"),
-        GridView.builder(
-          shrinkWrap: true,
-          padding: EdgeInsets.zero,
-          physics: NeverScrollableScrollPhysics(),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 4,
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 10,
-          ),
-          itemCount: 4,
-          itemBuilder: (context, index) => PlantGridItem(),
+        // --- BAGIAN GRID FOTO ---
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            _buildSectionTitle("Batch Terbaru"),
+            // Tombol Refresh untuk cek rombongan foto baru
+            IconButton(
+              icon: Icon(Icons.refresh, color: AppColors.primary),
+              onPressed: () => ref.refresh(plantImagesProvider),
+            ),
+          ],
         ),
+
+        imagesAsync.when(
+          data: (images) {
+            // Kita paksakan Grid selalu 4 slot agar rapi
+            // Slot yang tidak ada fotonya akan menampilkan placeholder kosong
+            return GridView.builder(
+              shrinkWrap: true,
+              padding: EdgeInsets.zero,
+              physics: NeverScrollableScrollPhysics(),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount:
+                    2, // Ubah jadi 2 kolom biar foto lebih jelas (opsional, bisa 4)
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+                childAspectRatio: 1.0,
+              ),
+              itemCount: 4, // Selalu render 4 kotak
+              itemBuilder: (context, index) {
+                // Cek apakah data tersedia untuk index ini
+                final itemData = index < images.length ? images[index] : null;
+                return PlantGridItem(data: itemData);
+              },
+            );
+          },
+          loading: () => Container(
+            height: 200,
+            child: Center(child: CircularProgressIndicator()),
+          ),
+          error: (err, stack) => Container(
+            height: 100,
+            color: Colors.red.shade50,
+            child: Center(child: Text("Gagal memuat foto: $err")),
+          ),
+        ),
+
+        // --- END GRID FOTO ---
         _buildSectionTitle("Informasi sensor"),
+        // ... (Sisa kode UI sensor tetap sama)
         Row(
           children: [
             Expanded(
@@ -150,16 +212,17 @@ class _DetectPageState extends ConsumerState<DetectPage> {
                 icon: Icons.water_drop_outlined,
                 iconColor: Colors.blue.shade400,
                 title: "Kelembapan",
-                value: tdsNutrisi,
-                unit: tdsNutrisi == "N/A" ? "" : "°C",
+                value:
+                    tdsNutrisi, // Note: Variabel kelembapan belum ada di model DeviceData anda
+                unit: tdsNutrisi == "N/A" ? "" : "%",
               ),
             ),
           ],
         ),
         SizedBox(height: 16),
         InfoCard(
-          icon: Icons.height,
-          iconColor: Colors.green.shade600,
+          icon: Icons.light_mode, // Ikon cahaya
+          iconColor: Colors.orange.shade600,
           title: "Intensitas Cahaya",
           value: intensitas,
           unit: "lux",
@@ -176,6 +239,7 @@ class _DetectPageState extends ConsumerState<DetectPage> {
     );
   }
   Widget _buildKolamView(DeviceData data) {
+    final currentSystemId = ref.watch(currentSystemIdProvider);
     final sensor = data.sensorValue;
     final aktuator = data.aktuatorStatus;
     final permukaan_kolam = (sensor.permukaanNutrisi ?? "").isEmpty
@@ -192,7 +256,7 @@ class _DetectPageState extends ConsumerState<DetectPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildSectionTitle("Live Kamera"),
-        LiveCameraView(deviceId: "Cam_001"),
+        LiveCameraView(deviceId: currentSystemId ?? ""),
         _buildSectionTitle("Informasi sensor"),
         Row(
           children: [

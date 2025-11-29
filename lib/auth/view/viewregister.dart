@@ -1,22 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:rivu_v1/auth/controller/auth_controller.dart';
 import 'package:rivu_v1/auth/view/pairing_dialog.dart';
 import 'package:rivu_v1/auth/view/wifi_dialog.dart';
+import 'package:rivu_v1/core/services/bluetooth_service.dart'; // Import ini penting
 import 'package:rivu_v1/widget/authtextfield.dart';
+
 class RegisterPage extends ConsumerStatefulWidget {
   final VoidCallback onGoToLogin;
   const RegisterPage({super.key, required this.onGoToLogin});
+
   @override
   ConsumerState<RegisterPage> createState() => _RegisterPageState();
 }
+
 class _RegisterPageState extends ConsumerState<RegisterPage> {
   final TextEditingController _namaController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
+
   @override
   void dispose() {
     _namaController.dispose();
@@ -25,24 +29,32 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
     _confirmPasswordController.dispose();
     super.dispose();
   }
+// Ganti _handleRegister Anda dengan ini
   Future<void> _handleRegister() async {
+    // ... (validasi field)
     if (_passwordController.text != _confirmPasswordController.text) {
       _showError("Konfirmasi password tidak cocok");
       return;
     }
+
+    // 1. Tampilkan PairingDialog
     final deviceIdentifier = await showDialog<String>(
       context: context,
       barrierDismissible: false,
       builder: (context) => PairingDialog(),
     );
     if (deviceIdentifier == null || deviceIdentifier.isEmpty)
-      return; 
+      return; // User batal
+
+    // 2. Tampilkan WifiDialog
     final deviceName = await showDialog<String>(
       context: context,
       barrierDismissible: false,
       builder: (context) => WifiDialog(),
     );
-    if (deviceName == null || deviceName.isEmpty) return; 
+    if (deviceName == null || deviceName.isEmpty) return; // User batal
+
+    // 3. Panggil SATU FUNGSI untuk melakukan semuanya
     try {
       await ref
           .read(authControllerProvider.notifier)
@@ -53,24 +65,33 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
             deviceIdentifier: deviceIdentifier,
             deviceName: deviceName,
           );
+      // Jika berhasil, AuthGate akan otomatis memindahkan user
     } catch (e) {
+      // AuthController sudah di set ke AsyncError,
+      // snackbar akan muncul otomatis dari listener
       _showError("Proses registrasi gagal: $e");
     }
   }
+
   void _showError(String message) {
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(message), backgroundColor: Colors.red),
     );
   }
+
   @override
   Widget build(BuildContext context) {
+    // ... (UI Build tetap sama seperti kode Anda sebelumnya)
     final authState = ref.watch(authControllerProvider);
+
+    // Listener untuk error global dari controller (opsional, karena sudah di-handle di try-catch)
     ref.listen(authControllerProvider, (_, state) {
       if (state is AsyncError) {
-        _showError(state.error.toString());
+        // _showError(state.error.toString()); // Bisa dikomentari jika double alert
       }
     });
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24.0),
       child: Column(
@@ -87,6 +108,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
             ),
             textAlign: TextAlign.center,
           ),
+          // ... (Sisa widget UI input field sama persis dengan kode Anda)
           const SizedBox(height: 8),
           const Text(
             "Daftar untuk memulai kontrol aquaponik Anda",
@@ -164,10 +186,9 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                               color: Colors.black,
                             ),
                           )
-                        : Text(
-                            "Lanjut", 
+                        : const Text(
+                            "Lanjut",
                             style: TextStyle(
-                              fontFamily: GoogleFonts.poppins().fontFamily,
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                               letterSpacing: 0.5,
@@ -185,7 +206,6 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
               Text(
                 "Sudah punya akun? ",
                 style: TextStyle(
-                  fontFamily: GoogleFonts.poppins().fontFamily,
                   color: Colors.white.withOpacity(0.8),
                   fontSize: 15,
                 ),
@@ -198,10 +218,9 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                     vertical: 4,
                   ),
                 ),
-                child: Text(
+                child: const Text(
                   "Masuk di sini",
                   style: TextStyle(
-                    fontFamily: GoogleFonts.poppins().fontFamily,
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
                     fontSize: 15,

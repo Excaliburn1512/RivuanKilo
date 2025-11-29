@@ -1,5 +1,11 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
 
 part of 'system_model.dart';
+
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
 SystemModel _$SystemModelFromJson(Map<String, dynamic> json) => SystemModel(
       systemId:
           const UuidValueConverter().fromJson(json['system_id'] as String),
@@ -7,6 +13,7 @@ SystemModel _$SystemModelFromJson(Map<String, dynamic> json) => SystemModel(
       description: json['description'] as String?,
       createdAt: DateTime.parse(json['created_at'] as String),
     );
+
 Map<String, dynamic> _$SystemModelToJson(SystemModel instance) =>
     <String, dynamic>{
       'system_id': const UuidValueConverter().toJson(instance.systemId),

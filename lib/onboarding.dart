@@ -1,15 +1,19 @@
 import "package:flutter/material.dart";
 import "package:rivu_v1/auth/baseauth.dart";
+import "package:rivu_v1/core/route.dart";
+
 class OnboardingPageData {
   final String title;
   final String description;
   OnboardingPageData({required this.title, required this.description});
 }
+
 class Onboarding extends StatefulWidget {
   const Onboarding({super.key});
   @override
   State<Onboarding> createState() => _OnboardingState();
 }
+
 class _OnboardingState extends State<Onboarding> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
@@ -35,6 +39,7 @@ class _OnboardingState extends State<Onboarding> {
     _pageController.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     bool isLastPage = _currentPage == _pages.length - 1;
@@ -107,43 +112,9 @@ class _OnboardingState extends State<Onboarding> {
                         ),
                         onPressed: () {
                           if (isLastPage) {
-                            Navigator.of(context).pushReplacement(
-                              PageRouteBuilder(
-                                pageBuilder:
-                                    (context, animation, secondaryAnimation) =>
-                                        const AuthPage(),
-                                transitionDuration: const Duration(
-                                  milliseconds: 1500,
-                                ),
-                                transitionsBuilder:
-                                    (
-                                      context,
-                                      animation,
-                                      secondaryAnimation,
-                                      child,
-                                    ) {
-                                      const begin = Offset(0.0, 1.0);
-                                      const end = Offset.zero;
-                                      final curve = Curves.ease;
-                                      final tween = Tween(
-                                        begin: begin,
-                                        end: end,
-                                      ).chain(CurveTween(curve: curve));
-                                      final offsetAnimation = animation.drive(
-                                        tween,
-                                      );
-                                      return SlideTransition(
-                                        position: offsetAnimation,
-                                        child: ClipRRect(
-                                          borderRadius: const BorderRadius.only(
-                                            topLeft: Radius.circular(30.0),
-                                            topRight: Radius.circular(30.0),
-                                          ),
-                                          child: child,
-                                        ),
-                                      );
-                                    },
-                              ),
+                            Navigator.popAndPushNamed(
+                              context,
+                              AppRoutes.initial,
                             );
                           } else {
                             _pageController.nextPage(
@@ -171,6 +142,7 @@ class _OnboardingState extends State<Onboarding> {
       ),
     );
   }
+
   Widget _buildPageContent(OnboardingPageData page) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -197,6 +169,7 @@ class _OnboardingState extends State<Onboarding> {
       ),
     );
   }
+
   Widget _buildPageIndicator() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,

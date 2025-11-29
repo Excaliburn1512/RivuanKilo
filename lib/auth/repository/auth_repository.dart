@@ -1,10 +1,9 @@
 import 'dart:io';
-import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rivu_v1/auth/model/auth_response.dart';
 import 'package:rivu_v1/core/api/auth_api_client.dart';
 import 'package:rivu_v1/core/services/storage_service.dart';
 import 'package:rivu_v1/auth/model/auth_request.dart';
-import 'package:rivu_v1/auth/model/auth_response.dart';
 import 'package:rivu_v1/auth/model/auth_state.dart';
 import 'package:rivu_v1/auth/model/user_model.dart';
 import 'package:rivu_v1/auth/model/system_model.dart';
@@ -89,6 +88,7 @@ class AuthRepository {
       rethrow;
     }
   }
+  // Tambahkan fungsi baru ini di AuthRepository
   Future<AuthState> registerAndProvision({
     required String name,
     required String email,
@@ -97,22 +97,32 @@ class AuthRepository {
     required String deviceName,
   }) async {
     try {
+      // 1. Register user
       await _authApiClient.register(
         UserCreateRequest(fullName: name, email: email, password: password),
       );
+
+      // 2. Login untuk dapat token
       final loginRequest = {'username': email, 'password': password};
       final loginResponse = await _authApiClient.login(loginRequest);
+
+      // 3. Simpan token PENTING!
       await _storageService.saveToken(loginResponse.token.accessToken);
       await _storageService.saveUser(loginResponse.user);
+
+      // 4. Provision device (sekarang DENGAN token)
       final provisionRequest = DeviceProvisionRequest(
         deviceUniqueId: deviceIdentifier,
         systemName: deviceName,
       );
       await _authApiClient.provisionDevice(provisionRequest);
+
+      // 5. Login LAGI untuk refresh data (mendapatkan list device baru)
       final finalLoginResponse = await _authApiClient.login(loginRequest);
       await _storageService.saveToken(finalLoginResponse.token.accessToken);
       await _storageService.saveUser(finalLoginResponse.user);
       await _storageService.saveSystems(finalLoginResponse.systems);
+
       print("Register, Login, dan Provision berhasil.");
       return AuthState(
         user: finalLoginResponse.user,
@@ -120,7 +130,7 @@ class AuthRepository {
       );
     } catch (e) {
       print("Gagal registerAndProvision: $e");
-      await _storageService.clearAll(); 
+      await _storageService.clearAll(); // Bersihkan jika gagal
       rethrow;
     }
   }

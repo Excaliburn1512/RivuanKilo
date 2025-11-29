@@ -7,6 +7,8 @@ import 'package:rivu_v1/auth/model/auth_response.dart';
 import 'package:rivu_v1/auth/model/system_model.dart';
 import 'package:rivu_v1/auth/model/user_model.dart';
 import 'package:rivu_v1/models/history_model.dart';
+import 'package:rivu_v1/models/notification_model.dart';
+import 'package:rivu_v1/models/plant_image_model.dart';
 import 'dio_provider.dart';
 part 'auth_api_client.g.dart'; 
 final authApiClientProvider = Provider<AuthApiClient>((ref) {
@@ -49,4 +51,12 @@ abstract class AuthApiClient {
   );
   @GET("/mobile/system/{systemId}/logs")
   Future<List<HistoryModel>> getHistoryLogs(@Path("systemId") String systemId);
+  @GET("/mobile/system/{systemId}/images")
+  Future<List<PlantImageModel>> getPlantImages(
+    @Path("systemId") String systemId,
+  );
+  @GET("/mobile/system/{systemId}/notifications")
+  Future<List<NotificationModel>> getNotifications(
+    @Path("systemId") String systemId,
+  );
 }

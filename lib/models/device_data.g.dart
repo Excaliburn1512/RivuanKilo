@@ -1,5 +1,11 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
 
 part of 'device_data.dart';
+
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
 DeviceData _$DeviceDataFromJson(Map json) => DeviceData(
       aktuatorStatus: AktuatorStatus.fromJson(
           Map<String, dynamic>.from(json['aktuator_status'] as Map)),
@@ -12,6 +18,7 @@ DeviceData _$DeviceDataFromJson(Map json) => DeviceData(
       sensorValue: SensorValue.fromJson(
           Map<String, dynamic>.from(json['sensor_value'] as Map)),
     );
+
 Map<String, dynamic> _$DeviceDataToJson(DeviceData instance) =>
     <String, dynamic>{
       'aktuator_status': instance.aktuatorStatus.toJson(),
@@ -20,6 +27,7 @@ Map<String, dynamic> _$DeviceDataToJson(DeviceData instance) =>
       'picture': instance.picture.toJson(),
       'sensor_value': instance.sensorValue.toJson(),
     };
+
 AktuatorStatus _$AktuatorStatusFromJson(Map json) => AktuatorStatus(
       keranKolam: json['keran_kolam'] as String?,
       keranNutrisi: json['keran_nutrisi'] as String?,
@@ -28,6 +36,7 @@ AktuatorStatus _$AktuatorStatusFromJson(Map json) => AktuatorStatus(
       pompaKolam: json['pompa_kolam'] as String?,
       pompaNutrisi: json['pompa_nutrisi'] as String?,
     );
+
 Map<String, dynamic> _$AktuatorStatusToJson(AktuatorStatus instance) =>
     <String, dynamic>{
       'keran_kolam': instance.keranKolam,
@@ -37,15 +46,18 @@ Map<String, dynamic> _$AktuatorStatusToJson(AktuatorStatus instance) =>
       'pompa_kolam': instance.pompaKolam,
       'pompa_nutrisi': instance.pompaNutrisi,
     };
+
 ControlCommand _$ControlCommandFromJson(Map json) => ControlCommand(
       liveKolam: json['live_kolam'] as bool?,
       scanTanaman: json['scan_tanaman'] as bool?,
     );
+
 Map<String, dynamic> _$ControlCommandToJson(ControlCommand instance) =>
     <String, dynamic>{
       'live_kolam': instance.liveKolam,
       'scan_tanaman': instance.scanTanaman,
     };
+
 ControlValue _$ControlValueFromJson(Map json) => ControlValue(
       kipasManual: json['kipas_manual'] as String?,
       timerJedaPompa: json['timer_jeda_pompa'] as String?,
@@ -54,6 +66,7 @@ ControlValue _$ControlValueFromJson(Map json) => ControlValue(
       timerPompaKolam: json['timer_pompa_kolam'] as String?,
       timerPompaNutrisi: json['timer_pompa_nutrisi'] as String?,
     );
+
 Map<String, dynamic> _$ControlValueToJson(ControlValue instance) =>
     <String, dynamic>{
       'kipas_manual': instance.kipasManual,
@@ -63,18 +76,21 @@ Map<String, dynamic> _$ControlValueToJson(ControlValue instance) =>
       'timer_pompa_kolam': instance.timerPompaKolam,
       'timer_pompa_nutrisi': instance.timerPompaNutrisi,
     };
+
 Picture _$PictureFromJson(Map json) => Picture(
       plant1: json['plant1'] as String?,
       plant2: json['plant2'] as String?,
       plant3: json['plant3'] as String?,
       plant4: json['plant4'] as String?,
     );
+
 Map<String, dynamic> _$PictureToJson(Picture instance) => <String, dynamic>{
       'plant1': instance.plant1,
       'plant2': instance.plant2,
       'plant3': instance.plant3,
       'plant4': instance.plant4,
     };
+
 SensorValue _$SensorValueFromJson(Map json) => SensorValue(
       intensitasCahaya: json['intensitas_cahaya'] as String?,
       kelembapanUdara: json['kelembapan_udara'] as String?,
@@ -86,6 +102,7 @@ SensorValue _$SensorValueFromJson(Map json) => SensorValue(
       tdsKolam: json['tds_kolam'] as String?,
       tdsNutrisi: json['tds_nutrisi'] as String?,
     );
+
 Map<String, dynamic> _$SensorValueToJson(SensorValue instance) =>
     <String, dynamic>{
       'intensitas_cahaya': instance.intensitasCahaya,

@@ -11,7 +11,7 @@ class ProfileAvatar extends ConsumerWidget {
     final user = ref.watch(authControllerProvider).valueOrNull?.user;
     final String? avatarUrl = user?.profilePicture;
     final String fullUrl = avatarUrl != null
-        ? "https://rivu.web.id/$avatarUrl"
+        ? "https://rivu.web.id/$avatarUrl?v=${DateTime.now().millisecondsSinceEpoch}"
         : "";
     return Stack(
       children: [

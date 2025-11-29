@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
+import 'package:hugeicons/hugeicons.dart';
 import 'package:rivu_v1/auth/controller/auth_controller.dart';
 import 'package:rivu_v1/colors.dart';
 import 'package:rivu_v1/core/api/auth_api_client.dart';
@@ -15,6 +16,7 @@ import 'package:rivu_v1/widget/bottomnavbar.dart';
 import 'package:rivu_v1/widget/profil/profile_about_dialog.dart';
 import 'package:rivu_v1/widget/profil/profile_switch_dialog.dart';
 import 'package:rivu_v1/widget/profil/profile_unlink_dialog.dart';
+import 'package:rivu_v1/core/services/notification_services.dart';
 class Home extends ConsumerStatefulWidget {
   const Home({Key? key}) : super(key: key);
   @override
@@ -37,6 +39,9 @@ class _HomeState extends ConsumerState<Home> {
     print(
       "Home Widget Initialized",
     ); 
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(notificationServiceProvider).init();
+    });
   }
   void _onItemTapped(int index) {
     setState(() {
@@ -144,13 +149,13 @@ class _HomeState extends ConsumerState<Home> {
       key: const Key('profileFab'),
       distance: 90,
       openButtonBuilder: RotateFloatingActionButtonBuilder(
-        child: const Icon(Icons.settings),
+        child: const HugeIcon(icon: HugeIcons.strokeRoundedSetting07),
         fabSize: ExpandableFabSize.regular,
         backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
       ),
       closeButtonBuilder: RotateFloatingActionButtonBuilder(
-        child: const Icon(Icons.close),
+        child: const HugeIcon(icon: HugeIcons.strokeRoundedCancel01),
         fabSize: ExpandableFabSize.regular,
         backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,

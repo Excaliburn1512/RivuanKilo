@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hugeicons/hugeicons.dart';
 class DashboardHeader extends StatelessWidget {
   final String userName;
   const DashboardHeader({Key? key, required this.userName}) : super(key: key);
@@ -7,9 +9,9 @@ class DashboardHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.only(
-        top: 10.0,
-        left: 16.0,
-        right: 16.0,
+        top:25.0,
+        left: 35.0,
+        right: 35.0,
         bottom: 150.0,
       ),
       width: double.infinity,
@@ -52,10 +54,10 @@ class DashboardHeader extends StatelessWidget {
               ],
             ),
             IconButton(
-              icon: Icon(
-                Icons.notifications_none,
+              icon: HugeIcon(
+                icon:HugeIcons.strokeRoundedNotification01,
                 color: Colors.white,
-                size: 28,
+                size: 30,
               ),
               onPressed: () {
                 Navigator.pushNamed(context, '/notifications');

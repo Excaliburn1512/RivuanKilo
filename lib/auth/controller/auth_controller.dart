@@ -2,6 +2,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rivu_v1/auth/model/auth_response.dart';
 import 'package:rivu_v1/auth/repository/auth_repository.dart';
 import 'package:rivu_v1/auth/model/auth_state.dart';
 import 'package:rivu_v1/core/services/firebase_service.dart'; 
@@ -68,6 +69,7 @@ class AuthController extends AsyncNotifier<AuthState> {
       rethrow;
     }
   }
+   // Tambahkan fungsi baru ini di AuthController
   Future<void> registerAndProvision({
     required String name,
     required String email,
@@ -84,11 +86,16 @@ class AuthController extends AsyncNotifier<AuthState> {
         deviceIdentifier: deviceIdentifier,
         deviceName: deviceName,
       );
+
+      // --- TAMBAHAN ---
+      // Set device pertama (yang baru didaftarkan) sebagai device aktif
       ref.read(selectedSystemIdProvider.notifier).state = authState
           .systems
           ?.firstOrNull
           ?.systemId
           .toString();
+      // --- SELESAI ---
+
       state = AsyncValue.data(authState);
     } catch (e, s) {
       state = AsyncValue.error(e, s);

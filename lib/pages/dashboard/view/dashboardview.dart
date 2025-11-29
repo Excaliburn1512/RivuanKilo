@@ -8,6 +8,7 @@ import 'package:rivu_v1/widget/dashboard/dashboardbanner.dart';
 import 'package:rivu_v1/widget/dashboard/weathercard.dart';
 import 'package:rivu_v1/widget/systemstatusbanner.dart';
 import 'package:rivu_v1/widget/infocard.dart';
+
 class Dashboard extends ConsumerWidget {
   const Dashboard({Key? key}) : super(key: key);
   Widget _buildSectionTitle(String title) {
@@ -23,6 +24,7 @@ class Dashboard extends ConsumerWidget {
       ),
     );
   }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authControllerProvider);
@@ -39,9 +41,7 @@ class Dashboard extends ConsumerWidget {
             clipBehavior: Clip.none,
             alignment: Alignment.topCenter,
             children: [
-              DashboardHeader(
-                userName: userName,
-              ),
+              DashboardHeader(userName: userName),
               Positioned(
                 top: 160,
                 child: Container(
@@ -50,27 +50,24 @@ class Dashboard extends ConsumerWidget {
                     data: (weather) => WeatherCard(
                       temp: "${weather.main.temp.toStringAsFixed(0)}°c",
                       location: weather.name,
-                      condition: weather
-                          .weather
-                          .first
-                          .main, 
+                      condition: weather.weather.first.main,
                     ),
                     loading: () => const WeatherCard(
                       temp: "--",
                       location: "Sedang memuat...",
-                      condition: "Clear", 
+                      condition: "Clear",
                     ),
                     error: (err, stack) => const WeatherCard(
                       temp: "-",
                       location: "Gagal memuat",
-                      condition: "Storm", 
+                      condition: "Storm",
                     ),
                   ),
                 ),
               ),
             ],
           ),
-          SizedBox(height: 110),
+          SizedBox(height: 80),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 30.0),
             child: Column(
@@ -82,7 +79,7 @@ class Dashboard extends ConsumerWidget {
                   color: AppColors.primary,
                 ),
                 SizedBox(height: 24),
-                _buildSectionTitle("Perangkat Saya"),
+                _buildSectionTitle("Perangkat Terhubung"),
                 if (authState.valueOrNull?.systems?.isNotEmpty ?? false)
                   ...authState.value!.systems!.map(
                     (system) => Padding(
@@ -90,10 +87,9 @@ class Dashboard extends ConsumerWidget {
                       child: SystemStatusBanner(
                         judul: system.systemName,
                         text:
-                            "ID: ${system.systemId.toString().substring(0, 8)}...",
+                            "ID: ${system.systemId.toString().substring(0, 25)}...",
                         ficon: Icons.developer_board,
-                        ricon: Icons.arrow_forward_ios,
-                        color: AppColors.btbutton,
+                        color: AppColors.primary,
                       ),
                     ),
                   )

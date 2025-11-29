@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:weather_animation/weather_animation.dart';
+import 'package:rivu_v1/widget/dashboard/wrapper_scene.dart';
 import 'package:rivu_v1/helper/weather_mapper.dart';
 class WeatherCard extends StatelessWidget {
   final String temp;
@@ -15,6 +15,7 @@ class WeatherCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scene = getWeatherScene(condition);
+    final colors = getWeatherColors(scene);
     return Container(
       height: 180,
       width: double.infinity,
@@ -47,9 +48,9 @@ class WeatherCard extends StatelessWidget {
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(16),
-                  child: WrapperScene.weather(
+                  child: CustomWrapperScene.weather(
                     scene: scene,
-                    colors: [],
+                    colors: colors,
                     isLeftCornerGradient: false,
                   ),
                 ),
@@ -91,7 +92,7 @@ class WeatherCard extends StatelessWidget {
                           condition,
                           style: GoogleFonts.poppins(
                             fontSize: 12,
-                            color: Colors.grey[600],
+                            color: Colors.black,
                           ),
                         ),
                       ],
@@ -99,7 +100,7 @@ class WeatherCard extends StatelessWidget {
                     Text(
                       temp,
                       style: GoogleFonts.poppins(
-                        fontSize: 32,
+                        fontSize: 42,
                         fontWeight: FontWeight.bold,
                         color: Colors.black87, 
                       ),
@@ -133,7 +134,7 @@ class WeatherCard extends StatelessWidget {
                           "Monitoring Live",
                           style: GoogleFonts.poppins(
                             fontSize: 10,
-                            color: Colors.grey[400],
+                            color: Colors.black87,
                             fontStyle: FontStyle.italic,
                           ),
                         ),

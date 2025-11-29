@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import 'package:elegant_nav_bar/elegant_nav_bar.dart' hide AppColors;
+import 'package:hugeicons/hugeicons.dart';
 import 'package:rivu_v1/colors.dart';
 class Navbar extends StatelessWidget {
   final int selectedIndex;
@@ -38,14 +39,14 @@ class Navbar extends StatelessWidget {
         fontWeight: FontWeight.w500,
       ),
       items: [
-        NavigationItem(iconWidget: Icon(Icons.home), label: 'Beranda'),
-        NavigationItem(iconWidget: Icon(Icons.camera_alt), label: 'Deteksi'),
+        NavigationItem(iconWidget: HugeIcon(icon: HugeIcons.strokeRoundedHome01), label: 'Beranda'),
+        NavigationItem(iconWidget: HugeIcon(icon: HugeIcons.strokeRoundedCamera01), label: 'Deteksi'),
         NavigationItem(
-          iconWidget: Icon(Icons.settings_remote),
+          iconWidget: HugeIcon(icon: HugeIcons.strokeRoundedRemoteControl),
           label: 'Control',
         ),
-        NavigationItem(iconWidget: Icon(Icons.history), label: 'Riwayat'),
-        NavigationItem(iconWidget: Icon(Icons.person), label: 'Profil'),
+        NavigationItem(iconWidget: HugeIcon(icon: HugeIcons.strokeRoundedTransactionHistory), label: 'Riwayat'),
+        NavigationItem(iconWidget: HugeIcon(icon: HugeIcons.strokeRoundedProfile02), label: 'Profil'),
       ],
     );
   }

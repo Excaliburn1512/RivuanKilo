@@ -3,11 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rivu_v1/colors.dart';
 import 'package:rivu_v1/core/services/bluetooth_service.dart';
 import 'package:google_fonts/google_fonts.dart';
+
 class WifiDialog extends ConsumerStatefulWidget {
   const WifiDialog({super.key});
   @override
   ConsumerState<WifiDialog> createState() => _WifiDialogState();
 }
+
 class _WifiDialogState extends ConsumerState<WifiDialog> {
   final _formKey = GlobalKey<FormState>();
   final _deviceNameController = TextEditingController();
@@ -16,6 +18,7 @@ class _WifiDialogState extends ConsumerState<WifiDialog> {
   bool _isSending = false;
   bool _obscurePassword = true;
   String? _error;
+
   @override
   void dispose() {
     _deviceNameController.dispose();
@@ -23,6 +26,7 @@ class _WifiDialogState extends ConsumerState<WifiDialog> {
     _passwordController.dispose();
     super.dispose();
   }
+
   Future<void> _sendCredentials() async {
     if (!_formKey.currentState!.validate()) {
       return;
@@ -50,10 +54,12 @@ class _WifiDialogState extends ConsumerState<WifiDialog> {
       await ref.read(bluetoothServiceProvider).disconnect();
     }
   }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+
     return Dialog(
       backgroundColor: Colors.transparent,
       insetPadding: const EdgeInsets.all(16),
@@ -79,10 +85,11 @@ class _WifiDialogState extends ConsumerState<WifiDialog> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              // Header
               Container(
                 padding: const EdgeInsets.all(24),
                 decoration: const BoxDecoration(
-                  color: Color(0xFF10B981), 
+                  color: Color(0xFF10B981), // Green primary
                 ),
                 child: Column(
                   children: [
@@ -120,6 +127,8 @@ class _WifiDialogState extends ConsumerState<WifiDialog> {
                   ],
                 ),
               ),
+
+              // Form content
               Flexible(
                 child: SingleChildScrollView(
                   padding: const EdgeInsets.all(24),
@@ -128,12 +137,13 @@ class _WifiDialogState extends ConsumerState<WifiDialog> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        // Info box
                         Container(
                           padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
                             color: const Color(
                               0xFFECFDF5,
-                            ), 
+                            ), // Light green background
                             borderRadius: BorderRadius.circular(16),
                           ),
                           child: Row(
@@ -157,6 +167,8 @@ class _WifiDialogState extends ConsumerState<WifiDialog> {
                           ),
                         ),
                         const SizedBox(height: 24),
+
+                        // Device Name Field
                         Text(
                           "Nama Perangkat",
                           style: GoogleFonts.inter(
@@ -208,6 +220,8 @@ class _WifiDialogState extends ConsumerState<WifiDialog> {
                               val!.isEmpty ? "Nama tidak boleh kosong" : null,
                         ),
                         const SizedBox(height: 20),
+
+                        // WiFi SSID Field
                         Text(
                           "Nama WiFi (SSID)",
                           style: GoogleFonts.inter(
@@ -259,6 +273,8 @@ class _WifiDialogState extends ConsumerState<WifiDialog> {
                               val!.isEmpty ? "SSID tidak boleh kosong" : null,
                         ),
                         const SizedBox(height: 20),
+
+                        // WiFi Password Field
                         Text(
                           "Password WiFi",
                           style: GoogleFonts.inter(
@@ -325,13 +341,15 @@ class _WifiDialogState extends ConsumerState<WifiDialog> {
                               : null,
                         ),
                         const SizedBox(height: 24),
+
+                        // Status indicators
                         if (_isSending) ...[
                           Container(
                             padding: const EdgeInsets.all(20),
                             decoration: BoxDecoration(
                               color: const Color(
                                 0xFFECFDF5,
-                              ), 
+                              ), // Light green background
                               borderRadius: BorderRadius.circular(16),
                             ),
                             child: Column(
@@ -369,13 +387,14 @@ class _WifiDialogState extends ConsumerState<WifiDialog> {
                           ),
                           const SizedBox(height: 16),
                         ],
+
                         if (_error != null) ...[
                           Container(
                             padding: const EdgeInsets.all(16),
                             decoration: BoxDecoration(
                               color: const Color(
                                 0xFFFEF2F2,
-                              ), 
+                              ), // Light red background
                               borderRadius: BorderRadius.circular(16),
                             ),
                             child: Row(
@@ -420,6 +439,8 @@ class _WifiDialogState extends ConsumerState<WifiDialog> {
                   ),
                 ),
               ),
+
+              // Footer buttons
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
